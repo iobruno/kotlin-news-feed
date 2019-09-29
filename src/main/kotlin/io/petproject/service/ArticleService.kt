@@ -1,11 +1,15 @@
 package io.petproject.service
 
 import io.petproject.model.Article
+import io.petproject.repository.ArticleRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import javax.transaction.Transactional
 
 @Service
-class ArticleService {
+@Transactional
+class ArticleService @Autowired constructor(val articleRepo: ArticleRepository) {
 
     fun publish(article: Article) {
         TODO("persist article in DB")
