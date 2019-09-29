@@ -1,18 +1,22 @@
 package io.petproject.controller
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import io.petproject.model.Article
 import io.petproject.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/v1/articles")
-class ArticleController @Autowired constructor(service: ArticleService) {
+class ArticleController @Autowired constructor(private val service: ArticleService) {
 
     @PostMapping
-    fun publish(@RequestBody article: Article) {
-        TODO("implement persistence")
+    fun publish(@RequestBody article: Article): ResponseEntity<Unit> {
+        service.publish(article)
+        return ResponseEntity(HttpStatus.CREATED)
     }
 
     @GetMapping
@@ -24,13 +28,22 @@ class ArticleController @Autowired constructor(service: ArticleService) {
     }
 
     @GetMapping("/{id}")
-    fun retrieve(@PathVariable("id") id: Long) {
-        TODO("implement retrieval")
+    fun retrieve(@PathVariable("id") id: Long): ResponseEntity<Article> {
+        val article: Article? = service.retrieve(id)
+        return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
     }
 
     @DeleteMapping("/{id}")
-    fun archive(@PathVariable("id") id: Long) {
-        TODO("implement soft delete")
+    fun archive(@PathVariable("id") id: Long): ResponseEntity<Any> {
+        if (service.archive(id)) {
+            return ResponseEntity.ok().build()
+        }
+        return ResponseEntity.notFound().build()
+    }
+
+    @ExceptionHandler(value = [InvalidDefinitionException::class])
+    fun handleUnprocessableEntity(): ResponseEntity<Any> {
+        return ResponseEntity.unprocessableEntity().build()
     }
 
 }
