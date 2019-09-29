@@ -67,7 +67,8 @@ internal class ArticleControllerTest {
 		        ],
 		        "tags": ["facebook", "image-compression", "gear", "internet"]
 	        }
-        }"""
+        }
+        """
 
         doNothing().`when`(service).publish(any())
         mockMvc.perform(post(BASE_URL)
@@ -89,7 +90,8 @@ internal class ArticleControllerTest {
                 {"username": "john.doe", "name": "John Doe"}
             ],
             "tags": ["facebook", "image-compression", "gear", "internet"]
-        }"""
+        }
+        """
 
         doNothing().`when`(service).publish(any())
         mockMvc.perform(post(BASE_URL)
@@ -105,13 +107,16 @@ internal class ArticleControllerTest {
 	        "headline": "headline",
 	        "summary": "summary",
 	        "content": "",
-            "publishDate": "2019-01-18",
-            "authors": [
-                {"username": "mariella.moon", "name": "Mariella Moon"},
-                {"username": "john.doe", "name": "John Doe"}
-            ],
-            "tags": ["facebook", "image-compression", "gear", "internet"]
-        }"""
+	        "meta": {
+		        "publishDate": "2019-01-18",
+		        "authors": [
+			        {"username": "mariella.moon", "name": "Mariella Moon"},
+			        {"username": "john.doe", "name": "John Doe"}
+		        ],
+		        "tags": ["facebook", "image-compression", "gear", "internet"]
+	        }
+        }
+        """
 
         doNothing().`when`(service).publish(any())
         mockMvc.perform(post(BASE_URL)
