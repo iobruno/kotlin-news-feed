@@ -1,7 +1,9 @@
 package io.petproject.model
 
-data class Author(val username: String,
-                  val name: String) {
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class Author(@JsonProperty("username") val username: String,
+                  @JsonProperty("name") val name: String) {
 
     init {
         require(username.isNotBlank()) { "Username must not be blank" }

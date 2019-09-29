@@ -1,9 +1,11 @@
 package io.petproject.model
 
-data class Article(val headline: String,
-                   val content: String,
-                   val summary: String?,
-                   val meta: ArticleMetadata) {
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class Article(@JsonProperty("headline") val headline: String,
+                   @JsonProperty("content") val content: String,
+                   @JsonProperty("summary") val summary: String?,
+                   @JsonProperty("meta") val meta: ArticleMetadata) {
 
     init {
         require(headline.isNotBlank()) { "Headline must not be blank" }
