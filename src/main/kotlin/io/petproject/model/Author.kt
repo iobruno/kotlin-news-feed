@@ -1,9 +1,21 @@
 package io.petproject.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.hibernate.annotations.NaturalId
+import javax.persistence.*
 
-data class Author(@JsonProperty("username") val username: String,
-                  @JsonProperty("name") val name: String) {
+@Entity
+@Table(name = "authors")
+data class Author(
+
+    @NaturalId @Column(name = "username", unique = true)
+    @JsonProperty("username") val username: String,
+
+    @Column(name = "name")
+    @JsonProperty("name") val name: String,
+
+    @Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "author_seq_gen")
+    @JsonProperty var id: Long? = null) {
 
     init {
         require(username.isNotBlank()) { "Username must not be blank" }
