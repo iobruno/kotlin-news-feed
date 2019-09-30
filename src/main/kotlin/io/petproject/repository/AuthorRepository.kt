@@ -7,4 +7,7 @@ import javax.transaction.Transactional
 
 @Repository
 @Transactional(value = Transactional.TxType.MANDATORY)
-interface AuthorRepository : JpaRepository<Author, Long>
+interface AuthorRepository : JpaRepository<Author, Long> {
+
+    fun findByUsername(username: String): Author?
+}
