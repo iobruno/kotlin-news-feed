@@ -5,11 +5,13 @@ import io.petproject.model.Article
 import io.petproject.model.ArticleMetadata
 import io.petproject.model.Author
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDate
@@ -77,5 +79,18 @@ internal class ArticleServiceTest {
         assertThat(article).isNull()
     }
 
+    @Test
+    fun `when purging an article, if it was found, delete it`() {
+        val publishedArticle = service.publish(article)
+        service.purge(publishedArticle.id!!)
+        assertThat(service.retrieve(publishedArticle.id!!)).isNull()
+    }
+
+    @Test
+    fun `when purging an article, if it was not found, throw EmptyResultDataAccessEx`() {
+        assertThrows(EmptyResultDataAccessException::class.java) {
+            service.purge(Long.MAX_VALUE)
+        }
+    }
 
 }
