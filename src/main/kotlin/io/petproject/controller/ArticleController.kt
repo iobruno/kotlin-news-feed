@@ -14,9 +14,9 @@ import java.time.LocalDate
 class ArticleController @Autowired constructor(private val service: ArticleService) {
 
     @PostMapping
-    fun publish(@RequestBody article: Article): ResponseEntity<Unit> {
-        service.publish(article)
-        return ResponseEntity(HttpStatus.CREATED)
+    fun publish(@RequestBody article: Article): ResponseEntity<Article> {
+        val publishedArticle = service.publish(article)
+        return ResponseEntity(publishedArticle, HttpStatus.CREATED)
     }
 
     @GetMapping
