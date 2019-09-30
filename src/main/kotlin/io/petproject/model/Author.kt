@@ -18,6 +18,7 @@ data class Author(
         @JsonProperty var id: Long? = null) {
 
     @ManyToMany(mappedBy = "meta.authors", fetch = FetchType.LAZY)
+    @JsonBackReference
     val articles: List<Article> = mutableListOf()
 
     init {

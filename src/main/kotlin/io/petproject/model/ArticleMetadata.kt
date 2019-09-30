@@ -19,6 +19,7 @@ data class ArticleMetadata(
             joinColumns = [JoinColumn(name = "article_id")],
             inverseJoinColumns = [JoinColumn(name = "author_id")]
         )
+        @JsonManagedReference
         @JsonProperty("authors")
         val authors: List<Author>) {
 
