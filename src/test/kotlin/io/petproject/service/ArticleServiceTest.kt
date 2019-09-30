@@ -64,4 +64,18 @@ internal class ArticleServiceTest {
                 .isEqualTo(anotherPublishedArticle.meta.authors.toList())
     }
 
+    @Test
+    fun `when retrieving an article, if it was found, return the object`() {
+        val publishedArticle = service.publish(article)
+        val article: Article? = service.retrieve(publishedArticle.id!!)
+        assertThat(article).isNotNull
+    }
+
+    @Test
+    fun `when retrieving an article, if it was not found, return null`() {
+        val article: Article? = service.retrieve(Long.MAX_VALUE)
+        assertThat(article).isNull()
+    }
+
+
 }
