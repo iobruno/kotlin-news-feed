@@ -144,6 +144,18 @@ internal class ArticleServiceTest {
         assertThat(articles.size).isEqualTo(2)
     }
 
+    @Test
+    fun `when searching with authors and tags as String, result should be the same`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                afterDate = LocalDate.of(2019, 1, 11),
+                beforeDate = null,
+                tags = "performance, algorithms, kotlin",
+                authors = "martin, gayle"
+        )
+        assertThat(articles.size).isEqualTo(2)
+    }
+
     private fun getArticles(): List<Article> {
         return listOf(
                 Article("headline", "content", "summary", ArticleMetadata(

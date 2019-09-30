@@ -4,9 +4,14 @@ import io.petproject.model.Article
 import io.petproject.model.ArticleMetadata
 import io.petproject.model.Author
 import io.petproject.repository.ArticleRepository
+import io.petproject.repository.ArticleSpecs.withAuthors
+import io.petproject.repository.ArticleSpecs.withDateAfter
+import io.petproject.repository.ArticleSpecs.withDateBefore
+import io.petproject.repository.ArticleSpecs.withTags
 import io.petproject.repository.AuthorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -41,12 +46,28 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         articleRepo.deleteById(id)
     }
 
-    fun search(authors: String?, tags: String?, afterDate: LocalDate?, beforeDate: LocalDate?): Page<Article> {
-        TODO("search articles matching parameters")
+    fun search(authors: String?, tags: String?, afterDate: LocalDate?, beforeDate: LocalDate?): List<Article> {
+        return search(
+                authors = sanitizeSearchString(authors),
+                tags = sanitizeSearchString(tags),
+                afterDate = afterDate,
+                beforeDate = beforeDate
+        )
     }
 
-    fun search(authors: List<String>, tags: List<String>, afterDate: LocalDate?, beforeDate: LocalDate?): Page<Article> {
-        TODO("search articles matching parameters")
+    fun search(authors: List<String>, tags: List<String>,
+               afterDate: LocalDate?, beforeDate: LocalDate?): List<Article> {
+
+        val specs = Specification.where(withAuthors(authors))
+                .and(withTags(tags))
+                .and(withDateAfter(afterDate))
+                .and(withDateBefore(beforeDate))
+
+        return articleRepo.findAll(specs)
+    }
+
+    private fun sanitizeSearchString(string: String?): List<String> {
+        return string?.let { s -> s.split(",").map { it.trim() } } ?: listOf()
     }
 
 }
