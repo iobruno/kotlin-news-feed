@@ -62,15 +62,17 @@ internal class ArticleControllerTest {
 	        "meta": {
 		        "publishDate": "2019-01-18",
 		        "authors": [
-			        {"username": "mariella.moon", "name": "Mariella Moon"},
-			        {"username": "john.doe", "name": "John Doe"}
+			        {"username": "john.doe", "name": "John Doe"},
+			        {"username": "jane.doe", "name": "Jane Doe"}
 		        ],
 		        "tags": ["facebook", "image-compression", "gear", "internet"]
 	        }
         }
         """
 
-        doNothing().`when`(service).publish(any())
+        `when`(service.publish(any()))
+                .thenReturn(Article("headline", "content", "summary", metadata))
+
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonRequest))
@@ -86,14 +88,13 @@ internal class ArticleControllerTest {
 	        "content": "content",
             "publishDate": "2019-01-18",
             "authors": [
-                {"username": "mariella.moon", "name": "Mariella Moon"},
-                {"username": "john.doe", "name": "John Doe"}
+                {"username": "john.doe", "name": "John Doe"},
+                {"username": "jane.doe", "name": "Jane Doe"}
             ],
             "tags": ["facebook", "image-compression", "gear", "internet"]
         }
         """
 
-        doNothing().`when`(service).publish(any())
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(jsonRequest))
@@ -110,15 +111,14 @@ internal class ArticleControllerTest {
 	        "meta": {
 		        "publishDate": "2019-01-18",
 		        "authors": [
-			        {"username": "mariella.moon", "name": "Mariella Moon"},
-			        {"username": "john.doe", "name": "John Doe"}
+			        {"username": "john.doe", "name": "John Doe"},
+			        {"username": "jane.doe", "name": "Jane Doe"}
 		        ],
 		        "tags": ["facebook", "image-compression", "gear", "internet"]
 	        }
         }
         """
 
-        doNothing().`when`(service).publish(any())
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(noContentJsonRequest))
