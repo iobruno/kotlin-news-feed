@@ -8,13 +8,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
@@ -127,7 +128,7 @@ internal class ArticleControllerTest {
 
     @Test
     fun `when retrieving an article, if it was found, return status 200`() {
-        `when`(service.retrieve(ArgumentMatchers.anyLong()))
+        `when`(service.retrieve(anyLong()))
             .thenReturn(Article("headline", "content", "summary", metadata))
 
         mockMvc.perform(get("$BASE_URL/{id}", 1L))
@@ -136,7 +137,7 @@ internal class ArticleControllerTest {
 
     @Test
     fun `when retrieving an article, if it was not found, return status 404`() {
-        `when`(service.retrieve(ArgumentMatchers.anyLong()))
+        `when`(service.retrieve(anyLong()))
                 .thenReturn(null)
 
         mockMvc.perform(get("$BASE_URL/{id}", 1L))
@@ -144,18 +145,18 @@ internal class ArticleControllerTest {
     }
 
     @Test
-    fun `when archiving an article, if it was found, return status 200`() {
-        `when`(service.archive(ArgumentMatchers.anyLong()))
-                .thenReturn(true)
+    fun `when purging an article, if it was found, return status 200`() {
+        doNothing()
+                .`when`(service).purge(anyLong())
 
         mockMvc.perform(delete("$BASE_URL/{id}", 1L))
                 .andExpect(status().isOk)
     }
 
     @Test
-    fun `when archiving an article, if it was not found, return status 404`() {
-        `when`(service.archive(ArgumentMatchers.anyLong()))
-                .thenReturn(false)
+    fun `when purging an article, if it was not found, return status 404`() {
+        doThrow(EmptyResultDataAccessException::class.java)
+                .`when`(service).purge(anyLong())
 
         mockMvc.perform(delete("$BASE_URL/{id}", 1L))
                 .andExpect(status().isNotFound)
