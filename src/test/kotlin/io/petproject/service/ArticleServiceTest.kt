@@ -15,6 +15,8 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 
 @ExtendWith(SpringExtension::class)
 @DataJpaTest
@@ -41,7 +43,8 @@ internal class ArticleServiceTest {
                                 Author("john.doe", "John Doe"),
                                 Author("jane.doe", "Jane Doe")
                         )
-                ))
+                )
+        )
     }
 
     @Test
@@ -91,6 +94,84 @@ internal class ArticleServiceTest {
         assertThrows(EmptyResultDataAccessException::class.java) {
             service.purge(Long.MAX_VALUE)
         }
+    }
+
+    @Test
+    fun `when searching by Authors, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                authors = listOf("martin", "jetbrains"),
+                tags = listOf(""),
+                afterDate = null,
+                beforeDate = null
+        )
+        assertThat(articles.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `when searching by Tags, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                authors = listOf(),
+                tags = listOf("algorithms", "kotlin", "scala"),
+                afterDate = null,
+                beforeDate = null
+        )
+        assertThat(articles.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `when searching by Date, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                authors = listOf(),
+                tags = listOf(),
+                afterDate = LocalDate.of(2019, 1, 10),
+                beforeDate = LocalDate.of(2019, 1, 16)
+        )
+        assertThat(articles.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `when searching by combining fields, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                afterDate = LocalDate.of(2019, 1, 11),
+                beforeDate = null,
+                tags = listOf("performance", "algorithms", "kotlin"),
+                authors = listOf("martin", "gayle")
+        )
+        assertThat(articles.size).isEqualTo(2)
+    }
+
+    private fun getArticles(): List<Article> {
+        return listOf(
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("scala", "functional-programming"),
+                        listOf(Author("martin.odersky", "Martin Odersky"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("microservices", "low-latency", "performance", "java"),
+                        listOf(Author("martin.thompson", "Martin Thompson"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("algorithms", "coding-interviews"),
+                        listOf(Author("gayle", "Gayle McDowell"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("kotlin", "microservices"),
+                        listOf(Author("jetbrains", "JetBrains Press"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("design-patterns", "java", "microservices"),
+                        listOf(Author("martin.fowler", "Martin Fowler"))
+                ))
+        )
     }
 
 }

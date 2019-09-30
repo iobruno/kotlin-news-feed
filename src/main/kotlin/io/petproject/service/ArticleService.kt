@@ -6,6 +6,7 @@ import io.petproject.model.Author
 import io.petproject.repository.ArticleRepository
 import io.petproject.repository.AuthorRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -40,13 +41,11 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         articleRepo.deleteById(id)
     }
 
-    fun search(authors: String?, tags: String?,
-               after: LocalDate?, before: LocalDate?) {
+    fun search(authors: String?, tags: String?, afterDate: LocalDate?, beforeDate: LocalDate?): Page<Article> {
         TODO("search articles matching parameters")
     }
 
-    fun search(authors: List<String>, tags: List<String>,
-               after: LocalDate?, before: LocalDate?) {
+    fun search(authors: List<String>, tags: List<String>, afterDate: LocalDate?, beforeDate: LocalDate?): Page<Article> {
         TODO("search articles matching parameters")
     }
 
