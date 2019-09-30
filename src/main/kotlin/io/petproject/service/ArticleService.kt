@@ -36,6 +36,10 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         TODO("archive/soft-delete article from DB")
     }
 
+    fun purge(id: Long): Boolean {
+        TODO("hard delete article from DB")
+    }
+
     fun search(authors: String, tags: String, startDate: LocalDate, endDate: LocalDate) {
         TODO("search articles matching parameters")
     }
