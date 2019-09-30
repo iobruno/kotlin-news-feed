@@ -5,6 +5,8 @@ import io.petproject.model.Article
 import io.petproject.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat.ISO
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,10 +23,10 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @GetMapping
-    fun search(@RequestParam("authors") authors: String,
-               @RequestParam("tags") tags: String,
-               @RequestParam("fromDate") fromDate: LocalDate,
-               @RequestParam("toDate") toDate: LocalDate) {
+    fun search(@RequestParam("authors") authors: String?,
+               @RequestParam("tags") tags: String?,
+               @RequestParam("afterDate") @DateTimeFormat(iso = ISO.DATE) afterDate: LocalDate?,
+               @RequestParam("beforeDate") @DateTimeFormat(iso = ISO.DATE) beforeDate: LocalDate?) {
         TODO("implement search")
     }
 
