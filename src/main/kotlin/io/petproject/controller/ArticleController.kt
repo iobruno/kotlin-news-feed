@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import io.petproject.model.Article
 import io.petproject.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -34,11 +35,13 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @DeleteMapping("/{id}")
-    fun archive(@PathVariable("id") id: Long): ResponseEntity<Any> {
-        if (service.archive(id)) {
-            return ResponseEntity.ok().build()
+    fun purge(@PathVariable("id") id: Long): ResponseEntity<Article> {
+        return try {
+            service.purge(id)
+            ResponseEntity.ok().build()
+        } catch (ex: EmptyResultDataAccessException) {
+            ResponseEntity.notFound().build()
         }
-        return ResponseEntity.notFound().build()
     }
 
     @ExceptionHandler(value = [InvalidDefinitionException::class])
