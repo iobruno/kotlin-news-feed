@@ -3,6 +3,7 @@ package io.petproject.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.NaturalId
+import java.lang.ClassCastException
 import javax.persistence.*
 
 @Entity
@@ -24,6 +25,21 @@ data class Author(
     init {
         require(username.isNotBlank()) { "Username must not be blank" }
         require(name.isNotBlank()) { "Author name must not be blank" }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return try {
+            val that = other as Author
+            this.username == that.username
+        } catch(ex: ClassCastException) {
+            false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = username.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
     }
 
 }
