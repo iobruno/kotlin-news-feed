@@ -40,12 +40,13 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         articleRepo.deleteById(id)
     }
 
-    fun search(authors: String, tags: String, startDate: LocalDate, endDate: LocalDate) {
+    fun search(authors: String?, tags: String?,
+               after: LocalDate?, before: LocalDate?) {
         TODO("search articles matching parameters")
     }
 
     fun search(authors: List<String>, tags: List<String>,
-               startDate: LocalDate, endDate: LocalDate) {
+               after: LocalDate?, before: LocalDate?) {
         TODO("search articles matching parameters")
     }
 
