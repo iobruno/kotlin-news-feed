@@ -121,7 +121,31 @@ internal class ArticleServiceTest {
     }
 
     @Test
-    fun `when searching by Date, return a Page of Articles, of all matches`() {
+    fun `when searching by afterDate alone, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                authors = listOf(),
+                tags = listOf(),
+                afterDate = LocalDate.of(2019, 1, 11),
+                beforeDate = null
+        )
+        assertThat(articles.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `when searching by beforeDate alone, return a Page of Articles, of all matches`() {
+        getArticles().map { service.publish(it) }
+        val articles = service.search(
+                authors = listOf(),
+                tags = listOf(),
+                afterDate = null,
+                beforeDate = LocalDate.of(2019, 1, 12)
+        )
+        assertThat(articles.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `when searching by afterDate and beforeDate, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
                 authors = listOf(),
@@ -129,7 +153,7 @@ internal class ArticleServiceTest {
                 afterDate = LocalDate.of(2019, 1, 10),
                 beforeDate = LocalDate.of(2019, 1, 16)
         )
-        assertThat(articles.size).isEqualTo(2)
+        assertThat(articles.size).isEqualTo(4)
     }
 
     @Test
