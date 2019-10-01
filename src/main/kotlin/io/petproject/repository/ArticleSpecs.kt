@@ -15,6 +15,7 @@ object ArticleSpecs {
         return object: Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val tagsPredicate = root.join<Any, Any>("meta").join<Any, Any>("tags")
+                query.distinct(true)
                 return if (tags.isNotEmpty()) tagsPredicate.`in`(tags) else null
             }
         }
@@ -24,6 +25,7 @@ object ArticleSpecs {
         return object: Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val publishDatePredicate: Path<LocalDate> = root.join<Any, Any>("meta").get("publishDate")
+                query.distinct(true)
                 return afterDate?.let { cb.greaterThanOrEqualTo(publishDatePredicate, it) }
             }
         }
@@ -33,6 +35,7 @@ object ArticleSpecs {
         return object: Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val publishDatePredicate: Path<LocalDate> = root.join<Any, Any>("meta").get("publishDate")
+                query.distinct(true)
                 return beforeDate?.let { cb.lessThan(publishDatePredicate, beforeDate) }
             }
         }
