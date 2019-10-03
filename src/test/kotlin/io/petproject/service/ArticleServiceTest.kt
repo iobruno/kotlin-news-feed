@@ -100,12 +100,12 @@ internal class ArticleServiceTest {
     fun `when searching by Authors, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                authors = listOf("martin", "jetbrains"),
-                tags = listOf(""),
+                authors = listOf("gayle", "thompson"),
+                tags = listOf(),
                 afterDate = null,
                 beforeDate = null
         )
-        assertThat(articles.size).isEqualTo(4)
+        assertThat(articles.size).isEqualTo(2)
     }
 
     @Test

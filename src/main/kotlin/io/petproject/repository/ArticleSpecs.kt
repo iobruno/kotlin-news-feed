@@ -8,7 +8,20 @@ import javax.persistence.criteria.*
 object ArticleSpecs {
 
     fun withAuthors(authors: List<String>): Specification<Article> {
-        TODO("implement specs for authors")
+        return object: Specification<Article> {
+            override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
+                val authorsPredicate = root.join<Any, Any>("meta").join<Any, Any>("authors")
+                query.distinct(true)
+
+                if (authors.isNotEmpty()) {
+                    val predicates: List<Predicate> = authors.map {
+                        cb.like(cb.lower(authorsPredicate.get("name")), "%${it.toLowerCase()}%")
+                    }
+                    return cb.or(*predicates.toTypedArray())
+                }
+                return null
+            }
+        }
     }
 
     fun withTags(tags: List<String>): Specification<Article> {
@@ -16,7 +29,11 @@ object ArticleSpecs {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val tagsPredicate = root.join<Any, Any>("meta").join<Any, Any>("tags")
                 query.distinct(true)
-                return if (tags.isNotEmpty()) tagsPredicate.`in`(tags) else null
+
+                if (tags.isNotEmpty()) {
+                    return tagsPredicate.`in`(tags)
+                }
+                return null
             }
         }
     }
