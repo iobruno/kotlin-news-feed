@@ -11,6 +11,8 @@ import io.petproject.repository.ArticleSpecs.withTags
 import io.petproject.repository.AuthorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -46,24 +48,29 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         articleRepo.deleteById(id)
     }
 
-    fun search(authors: String?, tags: String?, afterDate: LocalDate?, beforeDate: LocalDate?): List<Article> {
-        return search(
-                authors = sanitizeSearchString(authors),
-                tags = sanitizeSearchString(tags),
-                afterDate = afterDate,
-                beforeDate = beforeDate
-        )
-    }
-
     fun search(authors: List<String>, tags: List<String>,
-               afterDate: LocalDate?, beforeDate: LocalDate?): List<Article> {
+               afterDate: LocalDate?, beforeDate: LocalDate?,
+               page: Pageable = PageRequest.of(0, 10)): Page<Article> {
 
         val specs = Specification.where(withAuthors(authors))
                 .and(withTags(tags))
                 .and(withDateAfter(afterDate))
                 .and(withDateBefore(beforeDate))
 
-        return articleRepo.findAll(specs)
+        return articleRepo.findAll(specs, page)
+    }
+
+    fun search(authors: String?, tags: String?,
+               afterDate: LocalDate?, beforeDate: LocalDate?,
+               page: Pageable = PageRequest.of(0, 10)): Page<Article> {
+
+        return search(
+                authors = sanitizeSearchString(authors),
+                tags = sanitizeSearchString(tags),
+                afterDate = afterDate,
+                beforeDate = beforeDate,
+                page = page
+        )
     }
 
     private fun sanitizeSearchString(string: String?): List<String> {

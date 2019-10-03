@@ -105,7 +105,7 @@ internal class ArticleServiceTest {
                 afterDate = null,
                 beforeDate = null
         )
-        assertThat(articles.size).isEqualTo(2)
+        assertThat(articles.totalElements).isEqualTo(2)
     }
 
     @Test
@@ -117,7 +117,7 @@ internal class ArticleServiceTest {
                 afterDate = null,
                 beforeDate = null
         )
-        assertThat(articles.size).isEqualTo(3)
+        assertThat(articles.totalElements).isEqualTo(3)
     }
 
     @Test
@@ -129,7 +129,7 @@ internal class ArticleServiceTest {
                 afterDate = LocalDate.of(2019, 1, 11),
                 beforeDate = null
         )
-        assertThat(articles.size).isEqualTo(4)
+        assertThat(articles.totalElements).isEqualTo(4)
     }
 
     @Test
@@ -141,7 +141,7 @@ internal class ArticleServiceTest {
                 afterDate = null,
                 beforeDate = LocalDate.of(2019, 1, 12)
         )
-        assertThat(articles.size).isEqualTo(2)
+        assertThat(articles.totalElements).isEqualTo(2)
     }
 
     @Test
@@ -153,7 +153,7 @@ internal class ArticleServiceTest {
                 afterDate = LocalDate.of(2019, 1, 10),
                 beforeDate = LocalDate.of(2019, 1, 16)
         )
-        assertThat(articles.size).isEqualTo(4)
+        assertThat(articles.totalElements).isEqualTo(4)
     }
 
     @Test
@@ -165,7 +165,7 @@ internal class ArticleServiceTest {
                 tags = listOf("performance", "algorithms", "kotlin"),
                 authors = listOf("martin", "gayle")
         )
-        assertThat(articles.size).isEqualTo(2)
+        assertThat(articles.totalElements).isEqualTo(2)
     }
 
     @Test
@@ -177,7 +177,7 @@ internal class ArticleServiceTest {
                 tags = "performance, algorithms, kotlin",
                 authors = "martin, gayle"
         )
-        assertThat(articles.size).isEqualTo(2)
+        assertThat(articles.totalElements).isEqualTo(2)
     }
 
     private fun getArticles(): List<Article> {
