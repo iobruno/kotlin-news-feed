@@ -16,12 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.PageImpl
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(ArticleController::class)
@@ -165,7 +167,45 @@ internal class ArticleControllerTest {
     @Test
     @Disabled
     fun `when searching an article, return a list of all that match the criteria, with status 200`() {
-        TODO("not implemented")
+        `when`(service.search(
+                authors = any<String?>(),
+                tags = any<String?>(),
+                afterDate = any(),
+                beforeDate = any(),
+                page = any()
+        )).thenReturn(PageImpl(getArticles()))
+
+        mockMvc.perform(get("$BASE_URL/"))
+                .andExpect(status().isOk)
     }
 
+    private fun getArticles(): List<Article> {
+        return listOf(
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("scala", "functional-programming"),
+                        listOf(Author("martin.odersky", "Martin Odersky"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("microservices", "low-latency", "performance", "java"),
+                        listOf(Author("martin.thompson", "Martin Thompson"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("algorithms", "coding-interviews"),
+                        listOf(Author("gayle", "Gayle McDowell"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("kotlin", "microservices"),
+                        listOf(Author("jetbrains", "JetBrains Press"))
+                )),
+                Article("headline", "content", "summary", ArticleMetadata(
+                        LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                        listOf("design-patterns", "java", "microservices"),
+                        listOf(Author("martin.fowler", "Martin Fowler"))
+                ))
+        )
+    }
 }
