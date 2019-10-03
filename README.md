@@ -1,5 +1,8 @@
 # Avid News Feed 
 
+[![Build Status](https://travis-ci.org/iobruno/avid-news-feed.svg?branch=master)](https://travis-ci.org/iobruno/avid-news-feed)
+[![codecov](https://codecov.io/gh/iobruno/avid-news-feed/branch/master/graph/badge.svg)](https://codecov.io/gh/iobruno/avid-news-feed)
+
 ## Up and Running
 
 **Requirements**
