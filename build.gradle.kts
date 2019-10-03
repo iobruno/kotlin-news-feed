@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
+    jacoco
 }
 
 group = "io.petproject"
@@ -44,4 +45,37 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+    reports {
+        csv.isEnabled = false
+        html.isEnabled = false
+        xml.isEnabled = true
+        xml.destination = File("$buildDir/reports/jacoco/report.xml")
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    classDirectories.setFrom(
+            sourceSets.main.get().output.asFileTree.matching {
+                exclude(
+                        "io/petproject/ApplicationKt.class",
+                        "io/petproject/repository/*.class"
+                )
+            }
+    )
+}
+
+val codeCoverage by tasks.registering {
+    group = "verification"
+    description = "Gradle tests with Code Coverage"
+
+    dependsOn(tasks.test, tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
+
+    tasks.findByName("jacocoTestReport")
+            ?.mustRunAfter(tasks.findByName("test"))
+
+    tasks.findByName("jacocoTestCoverageVerification")
+            ?.mustRunAfter(tasks.findByName("jacocoTestReport"))
 }
