@@ -5,6 +5,8 @@ import io.petproject.model.Article
 import io.petproject.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO
 import org.springframework.http.HttpStatus
@@ -26,8 +28,12 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     fun search(@RequestParam("authors") authors: String?,
                @RequestParam("tags") tags: String?,
                @RequestParam("afterDate") @DateTimeFormat(iso = ISO.DATE) afterDate: LocalDate?,
-               @RequestParam("beforeDate") @DateTimeFormat(iso = ISO.DATE) beforeDate: LocalDate?) {
-        TODO("implement search")
+               @RequestParam("beforeDate") @DateTimeFormat(iso = ISO.DATE) beforeDate: LocalDate?,
+               @RequestParam("page", defaultValue = "0") page: Int,
+               @RequestParam("pageSize", defaultValue = "10") pageSize: Int): ResponseEntity<Page<Article>> {
+        val pageable = PageRequest.of(page, pageSize)
+        val searchResults = service.search(authors, tags, afterDate, beforeDate, pageable)
+        return ResponseEntity.ok(searchResults)
     }
 
     @GetMapping("/{id}")

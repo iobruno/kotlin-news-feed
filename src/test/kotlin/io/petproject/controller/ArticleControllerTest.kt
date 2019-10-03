@@ -165,7 +165,6 @@ internal class ArticleControllerTest {
     }
 
     @Test
-    @Disabled
     fun `when searching an article, return a list of all that match the criteria, with status 200`() {
         `when`(service.search(
                 authors = any<String?>(),
