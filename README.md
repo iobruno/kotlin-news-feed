@@ -6,9 +6,10 @@
 with the Spring Stack. It can be used as a reference or starting point for anyone playing around with **Kotlin** and **Spring**
 
 ## Tech Stack
-- Kotlin 1.3.+
-- Spring Framework (Spring Boot, Spring Data)
-- Gradle
+- Kotlin 1.3
+- Spring Framework 5.x (Spring Boot, Spring MVC, Spring Data JPA)
+- JUnit 5.x, Mockito
+- Gradle (Kotlin DSL)
 
 ## Application Design
 
