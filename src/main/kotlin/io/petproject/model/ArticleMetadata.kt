@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import javax.persistence.*
+import javax.persistence.CascadeType.*
 
 @Embeddable
 data class ArticleMetadata(
@@ -14,11 +15,10 @@ data class ArticleMetadata(
         @CollectionTable(name = "article_tags")
         @JsonProperty("tags") val tags: List<String>,
 
-        @ManyToMany(cascade = [CascadeType.ALL])
+        @ManyToMany(cascade = [PERSIST, DETACH, MERGE, REFRESH])
         @JoinTable(name = "authors_articles",
             joinColumns = [JoinColumn(name = "article_id")],
-            inverseJoinColumns = [JoinColumn(name = "author_id")]
-        )
+            inverseJoinColumns = [JoinColumn(name = "author_id")])
         @JsonManagedReference
         @JsonProperty("authors")
         val authors: List<Author>) {
