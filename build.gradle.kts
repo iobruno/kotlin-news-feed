@@ -14,26 +14,30 @@ group = "io.petproject"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    google()
-    jcenter()
+    mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     val junitVersion: String by project
     val assertJVersion: String by project
     val h2Version: String by project
-    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude(module = "spring-boot-starter-tomcat")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    runtimeOnly("com.h2database:h2:${h2Version}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
+    testImplementation("org.assertj:assertj-core:${assertJVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "junit")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
-    testImplementation("org.assertj:assertj-core:${assertJVersion}")
+    runtimeOnly("com.h2database:h2:${h2Version}")
 }
 
 tasks.withType<KotlinCompile> {
