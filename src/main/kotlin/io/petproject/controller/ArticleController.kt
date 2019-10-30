@@ -9,7 +9,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO
-import org.springframework.http.HttpStatus
+import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
+import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -21,7 +22,9 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     @PostMapping
     fun publish(@RequestBody article: Article): ResponseEntity<Article> {
         val publishedArticle = service.publish(article)
-        return ResponseEntity(publishedArticle, HttpStatus.CREATED)
+        return ResponseEntity
+                .created(linkTo(methodOn(this::class.java).retrieve(publishedArticle.id!!)).toUri())
+                .build()
     }
 
     @GetMapping
