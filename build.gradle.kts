@@ -67,7 +67,8 @@ tasks.jacocoTestCoverageVerification {
             sourceSets.main.get().output.asFileTree.matching {
                 exclude(
                         "io/petproject/ApplicationKt.class",
-                        "io/petproject/repository/*.class"
+                        "io/petproject/repository/*.class",
+                        "io/petproject/config/*.class"
                 )
             }
     )
