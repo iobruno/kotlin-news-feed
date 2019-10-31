@@ -1,6 +1,7 @@
 package io.petproject.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDate
 import javax.persistence.*
 
 @Entity
@@ -24,6 +25,39 @@ data class Article(
     init {
         require(headline.isNotBlank()) { "Headline must not be blank" }
         require(content.isNotBlank()) { "Content must not be blank" }
+    }
+
+    class Builder {
+        private lateinit var headline: String
+        private lateinit var content: String
+        private var summary: String? = null
+        private lateinit var publishDate: LocalDate
+        private lateinit var authors: MutableList<Author>
+        private lateinit var tags: MutableList<String>
+        private var id: Long? = null
+
+        fun headline(headline: String) = apply { this.headline = headline }
+
+        fun content(content: String) = apply { this.content = content }
+
+        fun summary(summary: String?) = apply { this.summary = summary }
+
+        fun publishDate(publishDate: LocalDate) = apply { this.publishDate = publishDate }
+
+        fun authors(authors: Iterable<Author>) = apply { this.authors = authors.toMutableList() }
+
+        fun authors(authors: MutableList<Author>) = apply { this.authors = authors }
+
+        fun tags(tags: Iterable<String>) = apply { this.tags = tags.toMutableList() }
+
+        fun tags(tags: MutableList<String>) = apply { this.tags = tags }
+
+        fun id(id: Long) = apply { this.id = id }
+
+        fun build(): Article {
+            return Article(headline = headline, content = content, summary = summary, id = id,
+                    meta = ArticleMetadata(publishDate = publishDate, authors = authors, tags = tags))
+        }
     }
 
 }
