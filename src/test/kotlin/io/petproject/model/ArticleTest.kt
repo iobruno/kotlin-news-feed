@@ -11,7 +11,7 @@ internal class ArticleTest {
     private lateinit var metadata: ArticleMetadata
 
     @BeforeEach
-    fun `setup`() {
+    fun setup() {
         metadata = ArticleMetadata(
             publishDate = LocalDate.now(),
             tags = listOf("first-tag", "second-tag"),

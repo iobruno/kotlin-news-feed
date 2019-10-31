@@ -31,7 +31,7 @@ internal class ArticleServiceTest {
     private lateinit var article: Article
 
     @BeforeEach
-    fun `setup`() {
+    fun setup() {
         article = Article (
                 headline = "headline",
                 content = "content",
@@ -182,31 +182,36 @@ internal class ArticleServiceTest {
 
     private fun getArticles(): List<Article> {
         return listOf(
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("scala", "functional-programming"),
-                        listOf(Author("martin.odersky", "Martin Odersky"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("microservices", "low-latency", "performance", "java"),
-                        listOf(Author("martin.thompson", "Martin Thompson"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("algorithms", "coding-interviews"),
-                        listOf(Author("gayle", "Gayle McDowell"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("kotlin", "microservices"),
-                        listOf(Author("jetbrains", "JetBrains Press"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("design-patterns", "java", "microservices"),
-                        listOf(Author("martin.fowler", "Martin Fowler"))
-                ))
+                Article(headline = "headline", content = "content", summary = "summary", id = 1L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("scala", "functional-programming"),
+                                authors = listOf(Author("martin.odersky", "Martin Odersky")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 2L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("microservices", "low-latency", "performance", "java"),
+                                authors = listOf(Author("martin.thompson", "Martin Thompson")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 3L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("algorithms", "coding-interviews"),
+                                authors = listOf(Author("gayle", "Gayle McDowell")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 4L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("kotlin", "microservices"),
+                                authors = listOf(Author("jetbrains", "JetBrains Press")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 5L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("design-patterns", "java", "microservices"),
+                                authors = listOf(Author("martin.fowler", "Martin Fowler")))
+                )
         )
     }
 
