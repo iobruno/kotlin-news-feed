@@ -25,11 +25,7 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
                                             val authorRepo: AuthorRepository) {
 
     fun publish(article: Article): Article {
-        val authors = article.meta.authors.map {
-            authorRepo.findByUsername(it.username) ?:
-            authorRepo.saveAndFlush(it)
-        }.toMutableList()
-
+        val authors = findOrSaveAuthors(article.meta.authors)
         val document = Article(
             headline = article.headline, content = article.content, summary = article.summary,
             meta = ArticleMetadata(article.meta.publishDate, article.meta.tags, authors)
