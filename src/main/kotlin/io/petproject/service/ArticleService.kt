@@ -41,8 +41,22 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         return articleRepo.findByIdOrNull(id)
     }
 
-    fun update(id: Long, article: Article): Article? {
-        TODO("to be implemented")
+    fun update(id: Long, updatingArticle: Article): Article? {
+        val foundArticle = retrieve(id)
+        return foundArticle?.let {
+            val authors = findOrSaveAuthors(updatingArticle.meta.authors)
+            val updatedArticle = Article.Builder()
+                    .headline(updatingArticle.headline)
+                    .content(updatingArticle.content)
+                    .summary(updatingArticle.summary)
+                    .publishDate(updatingArticle.meta.publishDate)
+                    .tags(updatingArticle.meta.tags)
+                    .authors(authors)
+                    .id(foundArticle.id!!)
+                    .build()
+
+            articleRepo.save(updatedArticle)
+        }
     }
 
     fun archive(id: Long): Boolean {
@@ -80,6 +94,13 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
 
     private fun sanitizeSearchString(string: String?): List<String> {
         return string?.let { s -> s.split(",").map { it.trim() } } ?: listOf()
+    }
+
+    private fun findOrSaveAuthors(authors: Iterable<Author>): MutableList<Author> {
+        return authors.map {
+            authorRepo.findByUsername(it.username) ?:
+            authorRepo.saveAndFlush(it)
+        }.toMutableList()
     }
 
 }
