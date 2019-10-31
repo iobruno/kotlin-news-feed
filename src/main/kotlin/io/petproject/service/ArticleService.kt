@@ -41,6 +41,10 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
         return articleRepo.findByIdOrNull(id)
     }
 
+    fun update(id: Long, article: Article): Article? {
+        TODO("to be implemented")
+    }
+
     fun archive(id: Long): Boolean {
         TODO("archive/soft-delete article from DB")
     }
