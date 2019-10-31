@@ -45,6 +45,13 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
         return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
     }
 
+    @PutMapping("/{id}")
+    fun update(@PathVariable("id") id: Long,
+               @RequestBody updatingArticle: Article): ResponseEntity<Article> {
+        val article: Article? = service.update(id, updatingArticle)
+        return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+    }
+
     @DeleteMapping("/{id}")
     fun purge(@PathVariable("id") id: Long): ResponseEntity<Article> {
         return try {
