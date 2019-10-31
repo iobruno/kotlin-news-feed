@@ -50,13 +50,12 @@ internal class ArticleControllerTest {
                 authors = mutableListOf(
                     Author("john.doe", "John Doe", 1L),
                     Author("jane.doe", "Jane Doe", 2L)
-                )
-        )
+                ))
     }
 
     @Test
     fun `when publishing an article, if it was successful, return status 201`() {
-        val jsonRequest = """
+        val payload = """
         {
 	        "headline": "headline",
 	        "summary": "summary",
@@ -77,13 +76,13 @@ internal class ArticleControllerTest {
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonRequest))
+                .content(payload))
                 .andExpect(status().isCreated)
     }
 
     @Test
     fun `when publishing an article, if the contract was invalid, return status 400`() {
-        val jsonRequest = """
+        val payload = """
         {
 	        "headline": "headline",
 	        "summary": "summary",
@@ -99,13 +98,13 @@ internal class ArticleControllerTest {
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(jsonRequest))
+                .content(payload))
                 .andExpect(status().isBadRequest)
     }
 
     @Test
     fun `when publishing an article, if entity couldn't be created, return status 422`() {
-        val noContentJsonRequest = """
+        val noContentPayload = """
         {
 	        "headline": "headline",
 	        "summary": "summary",
@@ -123,7 +122,7 @@ internal class ArticleControllerTest {
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(noContentJsonRequest))
+                .content(noContentPayload))
                 .andExpect(status().isUnprocessableEntity)
     }
 
@@ -142,6 +141,73 @@ internal class ArticleControllerTest {
                 .thenReturn(null)
 
         mockMvc.perform(get("$BASE_URL/{id}", 1L))
+                .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `when updating an article, if found, return status 200`() {
+        val placeId = 4L
+        val payload = """
+        {
+	        "headline": "anotherHeadline",
+	        "summary": "anotherSummary",
+	        "content": "anotherContent",
+	        "meta": {
+		        "publishDate": "2019-01-18",
+		        "authors": [
+			        {"username": "john.doe", "name": "John Doe"},
+			        {"username": "john.smith", "name": "John Smith"}
+		        ],
+		        "tags": ["facebook", "image-compression", "gear"]
+	        }
+        }
+        """
+
+        `when`(service.update(anyLong(), any()))
+                .thenReturn(Article.Builder()
+                        .headline("anotherHeadline")
+                        .summary("anotherSummary")
+                        .content("anotherContent")
+                        .publishDate(LocalDate.of(2019, 1, 18))
+                        .authors(mutableListOf(
+                                Author("john.doe", "John Doe"),
+                                Author("john.smith", "John Smith")
+                        ))
+                        .tags(mutableListOf("facebook", "image-compression", "gear"))
+                        .id(placeId)
+                        .build()
+                )
+
+        mockMvc.perform(put("$BASE_URL/{id}", placeId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(payload))
+                .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `when updating an article, if not found, return status 404`() {
+        val payload = """
+        {
+	        "headline": "anotherHeadline",
+	        "summary": "anotherSummary",
+	        "content": "anotherContent",
+	        "meta": {
+		        "publishDate": "2019-01-18",
+		        "authors": [
+			        {"username": "john.doe", "name": "John Doe"},
+			        {"username": "john.smith", "name": "John Smith"}
+		        ],
+		        "tags": ["facebook", "image-compression", "gear"]
+	        }
+        }
+        """
+
+        `when`(service.update(anyLong(), any()))
+                .thenReturn(null)
+
+        mockMvc.perform(put("$BASE_URL/{id}", Long.MAX_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(payload))
                 .andExpect(status().isNotFound)
     }
 
