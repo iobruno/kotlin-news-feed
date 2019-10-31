@@ -104,7 +104,13 @@ internal class ArticleServiceTest {
         assertThat(updatedArticle.summary).isEqualTo(updatingArticle.summary)
         assertThat(updatedArticle.meta.publishDate).isEqualTo(updatingArticle.meta.publishDate)
         assertThat(updatedArticle.meta.tags).isEqualTo(updatingArticle.meta.tags)
-        assertThat(updatedArticle.meta.authors).isEqualTo(authors)
+
+        assertThat(updatedArticle.meta.authors.map { it.username })
+                .isEqualTo(authors.map { it.username })
+
+        updatedArticle.meta.authors.forEach {
+            assertThat(it.id).isPositive()
+        }
     }
 
     @Test
