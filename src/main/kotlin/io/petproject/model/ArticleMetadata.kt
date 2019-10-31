@@ -13,7 +13,7 @@ data class ArticleMetadata(
 
         @ElementCollection(fetch = FetchType.LAZY)
         @CollectionTable(name = "article_tags")
-        @JsonProperty("tags") val tags: List<String>,
+        @JsonProperty("tags") val tags: MutableList<String>,
 
         @ManyToMany(cascade = [PERSIST, DETACH, MERGE, REFRESH])
         @JoinTable(name = "authors_articles",
@@ -21,7 +21,7 @@ data class ArticleMetadata(
             inverseJoinColumns = [JoinColumn(name = "author_id")])
         @JsonManagedReference
         @JsonProperty("authors")
-        val authors: List<Author>) {
+        val authors: MutableList<Author>) {
 
     init {
         require(tags.isNotEmpty()) { "There must be at least one tag label for the article" }

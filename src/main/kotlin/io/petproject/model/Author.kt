@@ -20,7 +20,7 @@ data class Author(
 
     @ManyToMany(mappedBy = "meta.authors", fetch = FetchType.LAZY)
     @JsonBackReference
-    val articles: List<Article> = mutableListOf()
+    val articles: MutableList<Article> = mutableListOf()
 
     init {
         require(username.isNotBlank()) { "Username must not be blank" }
