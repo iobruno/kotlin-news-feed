@@ -14,8 +14,8 @@ internal class ArticleTest {
     fun setup() {
         metadata = ArticleMetadata(
             publishDate = LocalDate.now(),
-            tags = listOf("first-tag", "second-tag"),
-            authors = listOf(
+            tags = mutableListOf("first-tag", "second-tag"),
+            authors = mutableListOf(
                 Author("john.doe", "John Doe"),
                 Author("jane.doe", "Jane Doe")
             )
