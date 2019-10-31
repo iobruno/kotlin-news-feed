@@ -32,19 +32,17 @@ internal class ArticleServiceTest {
 
     @BeforeEach
     fun setup() {
-        article = Article (
-                headline = "headline",
-                content = "content",
-                summary = "summary",
-                meta = ArticleMetadata(
-                        publishDate = LocalDate.now(),
-                        tags = mutableListOf("first-tag", "second-tag"),
-                        authors = mutableListOf(
-                                Author("john.doe", "John Doe"),
-                                Author("jane.doe", "Jane Doe")
-                        )
-                )
-        )
+        article = Article.Builder()
+                .headline("headline")
+                .content("content")
+                .summary("summary")
+                .publishDate(LocalDate.now())
+                .tags(mutableListOf("first-tag", "second-tag"))
+                .authors(mutableListOf(
+                        Author("john.doe", "John Doe"),
+                        Author("jane.doe", "Jane Doe")
+                ))
+                .build()
     }
 
     @Test
@@ -55,16 +53,18 @@ internal class ArticleServiceTest {
 
     @Test
     fun `when publishing articles with same authors, they should have the same authors id`() {
-        val anotherArticle = Article(
-                "anotherHeadline",
-                "anotherContent",
-                "anotherSummary",
-                article.meta
-        )
+        val meta = article.meta
+        val anotherArticle = Article.Builder()
+                .headline("anotherHeadline")
+                .content("anotherContent")
+                .summary("anotherSummary")
+                .publishDate(meta.publishDate)
+                .tags(meta.tags)
+                .authors(meta.authors)
+                .build()
 
         val publishedArticle = service.publish(article)
         val anotherPublishedArticle = service.publish(anotherArticle)
-
         assertThat(publishedArticle.meta.authors.toList())
                 .isEqualTo(anotherPublishedArticle.meta.authors.toList())
     }
