@@ -83,6 +83,46 @@ internal class ArticleServiceTest {
     }
 
     @Test
+    fun `when updating an article, if it was found, update and return it`() {
+        val pubArticle = service.publish(article)
+        val authors = listOf(
+                Author("john.smith", "John Smith"),
+                Author("john.doe", "John Doe")
+        )
+        val updatingArticle = Article.Builder()
+                .headline("New Headline")
+                .content("New Content")
+                .summary(pubArticle.summary)
+                .publishDate(pubArticle.meta.publishDate)
+                .tags(pubArticle.meta.tags)
+                .authors(authors)
+                .build()
+
+        val updatedArticle = service.update(pubArticle.id!!, updatingArticle)!!
+        assertThat(updatedArticle.headline).isEqualTo(updatingArticle.headline)
+        assertThat(updatedArticle.content).isEqualTo(updatingArticle.content)
+        assertThat(updatedArticle.summary).isEqualTo(updatingArticle.summary)
+        assertThat(updatedArticle.meta.publishDate).isEqualTo(updatingArticle.meta.publishDate)
+        assertThat(updatedArticle.meta.tags).isEqualTo(updatingArticle.meta.tags)
+        assertThat(updatedArticle.meta.authors).isEqualTo(authors)
+    }
+
+    @Test
+    fun `when updating an article, if it was not found, return null`() {
+        val updatingArticle = Article.Builder()
+                .headline("New Headline")
+                .content("New Content")
+                .summary("New Summary")
+                .publishDate(LocalDate.now())
+                .tags(mutableListOf("tag"))
+                .authors(mutableListOf(Author("foo.bar", "Foobar")))
+                .build()
+
+        val updatedArticle = service.update(Long.MAX_VALUE, updatingArticle)
+        assertThat(updatedArticle).isNull()
+    }
+
+    @Test
     fun `when purging an article, if it was found, delete it`() {
         val publishedArticle = service.publish(article)
         service.purge(publishedArticle.id!!)
