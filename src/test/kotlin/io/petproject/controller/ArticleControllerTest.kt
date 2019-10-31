@@ -5,7 +5,6 @@ import io.petproject.model.ArticleMetadata
 import io.petproject.model.Author
 import io.petproject.service.ArticleService
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -44,13 +43,13 @@ internal class ArticleControllerTest {
     }
 
     @BeforeEach
-    fun `setup`() {
+    fun setup() {
         metadata = ArticleMetadata(
                 publishDate = LocalDate.now(),
                 tags = listOf("first-tag", "second-tag"),
                 authors = listOf(
-                    Author("john.doe", "John Doe"),
-                    Author("jane.doe", "Jane Doe")
+                    Author("john.doe", "John Doe", 1L),
+                    Author("jane.doe", "Jane Doe", 2L)
                 )
         )
     }
@@ -74,7 +73,7 @@ internal class ArticleControllerTest {
         """
 
         `when`(service.publish(any()))
-                .thenReturn(Article("headline", "content", "summary", metadata))
+                .thenReturn(Article("headline", "content", "summary", metadata, 1L))
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -131,7 +130,7 @@ internal class ArticleControllerTest {
     @Test
     fun `when retrieving an article, if it was found, return status 200`() {
         `when`(service.retrieve(anyLong()))
-            .thenReturn(Article("headline", "content", "summary", metadata))
+            .thenReturn(Article("headline", "content", "summary", metadata, 1L))
 
         mockMvc.perform(get("$BASE_URL/{id}", 1L))
                 .andExpect(status().isOk)
@@ -180,31 +179,36 @@ internal class ArticleControllerTest {
 
     private fun getArticles(): List<Article> {
         return listOf(
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("scala", "functional-programming"),
-                        listOf(Author("martin.odersky", "Martin Odersky"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("microservices", "low-latency", "performance", "java"),
-                        listOf(Author("martin.thompson", "Martin Thompson"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("algorithms", "coding-interviews"),
-                        listOf(Author("gayle", "Gayle McDowell"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("kotlin", "microservices"),
-                        listOf(Author("jetbrains", "JetBrains Press"))
-                )),
-                Article("headline", "content", "summary", ArticleMetadata(
-                        LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                        listOf("design-patterns", "java", "microservices"),
-                        listOf(Author("martin.fowler", "Martin Fowler"))
-                ))
+                Article(headline = "headline", content = "content", summary = "summary", id = 1L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("scala", "functional-programming"),
+                                authors = listOf(Author("martin.odersky", "Martin Odersky")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 2L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("microservices", "low-latency", "performance", "java"),
+                                authors = listOf(Author("martin.thompson", "Martin Thompson")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 3L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("algorithms", "coding-interviews"),
+                                authors = listOf(Author("gayle", "Gayle McDowell")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 4L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("kotlin", "microservices"),
+                                authors = listOf(Author("jetbrains", "JetBrains Press")))
+                ),
+                Article(headline = "headline", content = "content", summary = "summary", id = 5L,
+                        meta = ArticleMetadata(
+                                publishDate = LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
+                                tags = listOf("design-patterns", "java", "microservices"),
+                                authors = listOf(Author("martin.fowler", "Martin Fowler")))
+                )
         )
     }
 }
