@@ -75,13 +75,8 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
                afterDate: LocalDate?, beforeDate: LocalDate?,
                page: Pageable = PageRequest.of(0, 10)): Page<Article> {
 
-        return search(
-                authors = sanitizeSearchString(authors),
-                tags = sanitizeSearchString(tags),
-                afterDate = afterDate,
-                beforeDate = beforeDate,
-                page = page
-        )
+        return search(authors = sanitizeSearchString(authors), tags = sanitizeSearchString(tags),
+                afterDate = afterDate, beforeDate = beforeDate, page = page)
     }
 
     private fun sanitizeSearchString(string: String?): List<String> {
