@@ -85,7 +85,7 @@ internal class ArticleServiceTest {
     @Test
     fun `when updating an article, if it was found, update and return it`() {
         val pubArticle = service.publish(article)
-        val authors = listOf(
+        val authors = mutableListOf(
                 Author("john.smith", "John Smith"),
                 Author("john.doe", "John Doe")
         )
