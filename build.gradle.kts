@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.3.50"
+    val kotlinVersion = "1.3.61"
     id("org.springframework.boot") version "2.1.8.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
     kotlin("jvm") version kotlinVersion
@@ -20,9 +20,9 @@ repositories {
 }
 
 dependencies {
-    val junitVersion: String by project
-    val assertJVersion: String by project
-    val h2Version: String by project
+    val junitVersion = "5.5.2"
+    val assertJVersion = "3.13.2"
+    val h2Version = "1.4.197"
 
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(module = "spring-boot-starter-tomcat")
@@ -34,12 +34,12 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.junit.jupiter:junit-jupiter:${junitVersion}")
-    testImplementation("org.assertj:assertj-core:${assertJVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "junit")
     }
-    runtimeOnly("com.h2database:h2:${h2Version}")
+    runtimeOnly("com.h2database:h2:$h2Version")
 }
 
 tasks.withType<KotlinCompile> {
