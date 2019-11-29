@@ -3,6 +3,7 @@ package io.petproject.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import javax.persistence.*
+import javax.persistence.GenerationType.AUTO
 
 @Entity
 @Table(name = "articles")
@@ -19,7 +20,7 @@ data class Article(
         @Embedded
         @JsonProperty("meta") val meta: ArticleMetadata,
 
-        @Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "article_seq_gen")
+        @Id @GeneratedValue(strategy = AUTO, generator = "article_seq_gen")
         @JsonProperty var id: Long? = null) {
 
     init {

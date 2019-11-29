@@ -5,17 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.NaturalId
 import java.lang.ClassCastException
 import javax.persistence.*
+import javax.persistence.GenerationType.AUTO
 
 @Entity
 @Table(name = "authors")
 data class Author(
+
         @NaturalId @Column(name = "username", unique = false)
         @JsonProperty("username") val username: String,
 
         @Column(name = "name")
         @JsonProperty("name") val name: String,
 
-        @Id @GeneratedValue(strategy = GenerationType.AUTO, generator = "author_seq_gen")
+        @Id @GeneratedValue(strategy = AUTO, generator = "author_seq_gen")
         @JsonProperty var id: Long? = null) {
 
     @ManyToMany(mappedBy = "meta.authors", fetch = FetchType.LAZY)
