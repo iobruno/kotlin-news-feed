@@ -1,6 +1,7 @@
 # Avid News Feed 
 [![Build Status](https://travis-ci.org/iobruno/avid-news-feed.svg?branch=master)](https://travis-ci.org/iobruno/avid-news-feed)
 [![codecov](https://codecov.io/gh/iobruno/avid-news-feed/branch/master/graph/badge.svg)](https://codecov.io/gh/iobruno/avid-news-feed)
+[![Maintainability](https://api.codeclimate.com/v1/badges/66f1b97f6bf332153f1a/maintainability)](https://codeclimate.com/github/iobruno/avid-news-feed/maintainability)
 
 **Avid News Feed** is an open-source project, that I built on my free time, to develop a REST API on top of Kotlin, 
 with the Spring Stack. It can be used as a reference or starting point for anyone playing around with **Kotlin** and **Spring**
