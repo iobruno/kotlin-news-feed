@@ -11,6 +11,7 @@ with the Spring Stack. It can be used as a reference or starting point for anyon
 - Spring Framework 5.x (Spring Boot, Spring MVC, Spring Data JPA)
 - JUnit 5.x, Mockito
 - Gradle (Kotlin DSL)
+- Docker, docker-compose
 
 ## Application Design
 
@@ -21,6 +22,11 @@ with the Spring Stack. It can be used as a reference or starting point for anyon
 - **Repository**: Handles DB transactions, and Specification Pattern/Predicates for CriteriaQuery
 
 ## Up and Running 
+
+**Docker (OS-independent)**
+```
+$ docker-compose up -d
+```
 
 **Linux | macOS:**
 ```
@@ -56,5 +62,5 @@ https://www.getpostman.com/collections/96bd0fdffd578b98ecd2
 ## TODO:
 - [x] Automated builds with a CI (Travis | CircleCI)
 - [x] Code Coverage check
-- [ ] Dockerize app
+- [x] Dockerize app
 - [ ] Ship it with GraalVM
