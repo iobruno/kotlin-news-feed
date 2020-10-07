@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -58,9 +59,9 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
         }
     }
 
-    @ExceptionHandler(value = [InvalidDefinitionException::class])
-    fun handleUnprocessableEntity(): ResponseEntity<Any> {
-        return ResponseEntity.unprocessableEntity().build()
+    @ExceptionHandler(value = [HttpMessageNotReadableException::class])
+    fun handleMessageNotReadable(): ResponseEntity<Any> {
+        return ResponseEntity.badRequest().build()
     }
 
 }

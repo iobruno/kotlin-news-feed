@@ -123,7 +123,7 @@ internal class ArticleControllerTest {
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(noContentPayload))
-                .andExpect(status().isUnprocessableEntity)
+                .andExpect(status().isBadRequest)
     }
 
     @Test
