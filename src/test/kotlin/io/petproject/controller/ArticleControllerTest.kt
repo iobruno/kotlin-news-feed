@@ -75,7 +75,7 @@ internal class ArticleControllerTest {
                 .thenReturn(Article("headline", "content", "summary", metadata, 1L))
 
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(payload))
                 .andExpect(status().isCreated)
     }
@@ -97,7 +97,7 @@ internal class ArticleControllerTest {
         """
 
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(payload))
                 .andExpect(status().isBadRequest)
     }
@@ -121,7 +121,7 @@ internal class ArticleControllerTest {
         """
 
         mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(noContentPayload))
                 .andExpect(status().isUnprocessableEntity)
     }
@@ -179,7 +179,7 @@ internal class ArticleControllerTest {
                 )
 
         mockMvc.perform(put("$BASE_URL/{id}", placeId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(payload))
                 .andExpect(status().isOk)
     }
@@ -206,7 +206,7 @@ internal class ArticleControllerTest {
                 .thenReturn(null)
 
         mockMvc.perform(put("$BASE_URL/{id}", Long.MAX_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(payload))
                 .andExpect(status().isNotFound)
     }
