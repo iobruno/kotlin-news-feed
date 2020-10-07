@@ -1,6 +1,5 @@
 package io.petproject.controller
 
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import io.petproject.model.Article
 import io.petproject.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.*
@@ -21,7 +21,7 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     @PostMapping
     fun publish(@RequestBody article: Article): ResponseEntity<Article> {
         val publishedArticle = service.publish(article)
-        return ResponseEntity.status(201).body(publishedArticle)
+        return ResponseEntity.status(HttpStatus.CREATED).body(publishedArticle)
     }
 
     @GetMapping
