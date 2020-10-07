@@ -63,9 +63,9 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
                afterDate: LocalDate?, beforeDate: LocalDate?,
                page: Pageable = PageRequest.of(0, 10)): Page<Article> {
 
-        val specs = Specification.where(withAuthors(authors))
-                .and(withTags(tags))
-                .and(withDateAfter(afterDate))
+        val specs = Specification.where(withAuthors(authors))!!
+                .and(withTags(tags))!!
+                .and(withDateAfter(afterDate))!!
                 .and(withDateBefore(beforeDate))
 
         return articleRepo.findAll(specs, page)
