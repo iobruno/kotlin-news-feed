@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.3.61"
-    id("org.springframework.boot") version "2.1.8.RELEASE"
-    id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    val kotlinVersion = "1.4.10"
+    id("org.springframework.boot") version "2.3.4.RELEASE"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -20,8 +20,8 @@ repositories {
 }
 
 dependencies {
-    val junitVersion = "5.5.2"
-    val assertJVersion = "3.13.2"
+    val junitVersion = "5.7.0"
+    val assertJVersion = "3.17.2"
     val h2Version = "1.4.197"
 
     implementation("org.springframework.boot:spring-boot-starter-web") {
