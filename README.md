@@ -7,7 +7,7 @@
 with the Spring Stack. It can be used as a reference or starting point for anyone playing around with **Kotlin** and **Spring**
 
 ## Tech Stack
-- Kotlin 1.4
+- Kotlin 1.4 (targeting Java 11)
 - Spring Framework 5.x (Spring Boot, Spring MVC, Spring Data JPA)
 - JUnit 5.x, Mockito
 - Gradle (Kotlin DSL)
