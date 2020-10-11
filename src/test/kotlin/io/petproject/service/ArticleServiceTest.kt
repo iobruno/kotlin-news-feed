@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 @ExtendWith(SpringExtension::class)
 @DataJpaTest
 @ContextConfiguration(classes = [
@@ -33,16 +32,18 @@ internal class ArticleServiceTest {
     @BeforeEach
     fun setup() {
         article = Article.Builder()
-                .headline("headline")
-                .content("content")
-                .summary("summary")
-                .publishDate(LocalDate.now())
-                .tags(mutableListOf("first-tag", "second-tag"))
-                .authors(mutableListOf(
-                        Author("john.doe", "John Doe"),
-                        Author("jane.doe", "Jane Doe")
-                ))
-                .build()
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .publishDate(LocalDate.now())
+            .tags(mutableListOf("first-tag", "second-tag"))
+            .authors(
+                mutableListOf(
+                    Author("john.doe", "John Doe"),
+                    Author("jane.doe", "Jane Doe")
+                )
+            )
+            .build()
     }
 
     @Test
@@ -55,18 +56,18 @@ internal class ArticleServiceTest {
     fun `when publishing articles with same authors, they should have the same authors id`() {
         val meta = article.meta
         val anotherArticle = Article.Builder()
-                .headline("anotherHeadline")
-                .content("anotherContent")
-                .summary("anotherSummary")
-                .publishDate(meta.publishDate)
-                .tags(meta.tags)
-                .authors(meta.authors)
-                .build()
+            .headline("anotherHeadline")
+            .content("anotherContent")
+            .summary("anotherSummary")
+            .publishDate(meta.publishDate)
+            .tags(meta.tags)
+            .authors(article.authors)
+            .build()
 
         val publishedArticle = service.publish(article)
         val anotherPublishedArticle = service.publish(anotherArticle)
-        assertThat(publishedArticle.meta.authors.toList())
-                .isEqualTo(anotherPublishedArticle.meta.authors.toList())
+        assertThat(publishedArticle.authors.toList())
+            .isEqualTo(anotherPublishedArticle.authors.toList())
     }
 
     @Test
@@ -86,17 +87,17 @@ internal class ArticleServiceTest {
     fun `when updating an article, if it was found, update and return it`() {
         val pubArticle = service.publish(article)
         val authors = mutableListOf(
-                Author("john.smith", "John Smith"),
-                Author("john.doe", "John Doe")
+            Author("john.smith", "John Smith"),
+            Author("john.doe", "John Doe")
         )
         val updatingArticle = Article.Builder()
-                .headline("New Headline")
-                .content("New Content")
-                .summary(pubArticle.summary)
-                .publishDate(pubArticle.meta.publishDate)
-                .tags(pubArticle.meta.tags)
-                .authors(authors)
-                .build()
+            .headline("New Headline")
+            .content("New Content")
+            .summary(pubArticle.summary)
+            .publishDate(pubArticle.meta.publishDate)
+            .tags(pubArticle.meta.tags)
+            .authors(authors)
+            .build()
 
         val updatedArticle = service.update(pubArticle.id!!, updatingArticle)!!
         assertThat(updatedArticle.headline).isEqualTo(updatingArticle.headline)
@@ -105,10 +106,10 @@ internal class ArticleServiceTest {
         assertThat(updatedArticle.meta.publishDate).isEqualTo(updatingArticle.meta.publishDate)
         assertThat(updatedArticle.meta.tags).isEqualTo(updatingArticle.meta.tags)
 
-        assertThat(updatedArticle.meta.authors.map { it.username })
-                .isEqualTo(authors.map { it.username })
+        assertThat(updatedArticle.authors.map { it.username })
+            .isEqualTo(authors.map { it.username })
 
-        updatedArticle.meta.authors.forEach {
+        updatedArticle.authors.forEach {
             assertThat(it.id).isPositive()
         }
     }
@@ -116,13 +117,13 @@ internal class ArticleServiceTest {
     @Test
     fun `when updating an article, if it was not found, return null`() {
         val updatingArticle = Article.Builder()
-                .headline("New Headline")
-                .content("New Content")
-                .summary("New Summary")
-                .publishDate(LocalDate.now())
-                .tags(mutableListOf("tag"))
-                .authors(mutableListOf(Author("foo.bar", "Foobar")))
-                .build()
+            .headline("New Headline")
+            .content("New Content")
+            .summary("New Summary")
+            .publishDate(LocalDate.now())
+            .tags(mutableListOf("tag"))
+            .authors(mutableListOf(Author("foo.bar", "Foobar")))
+            .build()
 
         val updatedArticle = service.update(Long.MAX_VALUE, updatingArticle)
         assertThat(updatedArticle).isNull()
@@ -146,11 +147,12 @@ internal class ArticleServiceTest {
     fun `when searching by Authors, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                authors = listOf("gayle", "thompson"),
-                tags = listOf(),
-                afterDate = null,
-                beforeDate = null
+            listOf("gayle", "thompson"),
+            listOf(),
+            null,
+            null
         )
+
         assertThat(articles.totalElements).isEqualTo(2)
     }
 
@@ -158,35 +160,26 @@ internal class ArticleServiceTest {
     fun `when searching by Tags, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                authors = listOf(),
-                tags = listOf("algorithms", "kotlin", "scala"),
-                afterDate = null,
-                beforeDate = null
+            listOf(),
+            listOf("algorithms", "kotlin", "scala"),
+            null,
+            null
         )
+
         assertThat(articles.totalElements).isEqualTo(3)
     }
 
     @Test
     fun `when searching by afterDate alone, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
-        val articles = service.search(
-                authors = listOf(),
-                tags = listOf(),
-                afterDate = LocalDate.of(2019, 1, 11),
-                beforeDate = null
-        )
+        val articles = service.search(listOf(), listOf(), LocalDate.of(2019, 1, 11), null)
         assertThat(articles.totalElements).isEqualTo(4)
     }
 
     @Test
     fun `when searching by beforeDate alone, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
-        val articles = service.search(
-                authors = listOf(),
-                tags = listOf(),
-                afterDate = null,
-                beforeDate = LocalDate.of(2019, 1, 12)
-        )
+        val articles = service.search(listOf(), listOf(), null, LocalDate.of(2019, 1, 12))
         assertThat(articles.totalElements).isEqualTo(2)
     }
 
@@ -194,11 +187,12 @@ internal class ArticleServiceTest {
     fun `when searching by afterDate and beforeDate, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                authors = listOf(),
-                tags = listOf(),
-                afterDate = LocalDate.of(2019, 1, 10),
-                beforeDate = LocalDate.of(2019, 1, 16)
+            listOf(),
+            listOf(),
+            LocalDate.of(2019, 1, 10),
+            LocalDate.of(2019, 1, 16)
         )
+
         assertThat(articles.totalElements).isEqualTo(4)
     }
 
@@ -206,10 +200,10 @@ internal class ArticleServiceTest {
     fun `when searching by combining fields, return a Page of Articles, of all matches`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                afterDate = LocalDate.of(2019, 1, 11),
-                beforeDate = null,
-                tags = listOf("performance", "algorithms", "kotlin"),
-                authors = listOf("martin", "gayle")
+            listOf("martin", "gayle"),
+            listOf("performance", "algorithms", "kotlin"),
+            LocalDate.of(2019, 1, 11),
+            null
         )
         assertThat(articles.totalElements).isEqualTo(2)
     }
@@ -218,47 +212,59 @@ internal class ArticleServiceTest {
     fun `when searching with authors and tags as String, result should be the same`() {
         getArticles().map { service.publish(it) }
         val articles = service.search(
-                afterDate = LocalDate.of(2019, 1, 11),
-                beforeDate = null,
-                tags = "performance, algorithms, kotlin",
-                authors = "martin, gayle"
+            afterDate = LocalDate.of(2019, 1, 11),
+            beforeDate = null,
+            tags = "performance, algorithms, kotlin",
+            authors = "martin, gayle"
         )
         assertThat(articles.totalElements).isEqualTo(2)
     }
 
-    private fun getArticles(): List<Article> {
-        return mutableListOf(
-                Article(headline = "headline", content = "content", summary = "summary", id = 1L,
-                        meta = ArticleMetadata(
-                                publishDate = LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME),
-                                tags = mutableListOf("scala", "functional-programming"),
-                                authors = mutableListOf(Author("martin.odersky", "Martin Odersky")))
-                ),
-                Article(headline = "headline", content = "content", summary = "summary", id = 2L,
-                        meta = ArticleMetadata(
-                                publishDate = LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                                tags = mutableListOf("microservices", "low-latency", "performance", "java"),
-                                authors = mutableListOf(Author("martin.thompson", "Martin Thompson")))
-                ),
-                Article(headline = "headline", content = "content", summary = "summary", id = 3L,
-                        meta = ArticleMetadata(
-                                publishDate = LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                                tags = mutableListOf("algorithms", "coding-interviews"),
-                                authors = mutableListOf(Author("gayle", "Gayle McDowell")))
-                ),
-                Article(headline = "headline", content = "content", summary = "summary", id = 4L,
-                        meta = ArticleMetadata(
-                                publishDate = LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                                tags = mutableListOf("kotlin", "microservices"),
-                                authors = mutableListOf(Author("jetbrains", "JetBrains Press")))
-                ),
-                Article(headline = "headline", content = "content", summary = "summary", id = 5L,
-                        meta = ArticleMetadata(
-                                publishDate = LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME),
-                                tags = mutableListOf("design-patterns", "java", "microservices"),
-                                authors = mutableListOf(Author("martin.fowler", "Martin Fowler")))
-                )
-        )
-    }
-
+    private fun getArticles() = mutableListOf(
+        Article.builder
+            .id(1L)
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .authors(mutableListOf(Author("martin.odersky", "Martin Odersky")))
+            .publishDate(LocalDate.parse("2019-01-10T13:14:00", DateTimeFormatter.ISO_DATE_TIME))
+            .tags(mutableListOf("scala", "functional-programming"))
+            .build(),
+        Article.builder
+            .id(2L)
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .authors(mutableListOf(Author("martin.thompson", "Martin Thompson")))
+            .publishDate(LocalDate.parse("2019-01-11T10:40:00", DateTimeFormatter.ISO_DATE_TIME))
+            .tags(mutableListOf("microservices", "low-latency", "performance", "java"))
+            .build(),
+        Article.builder
+            .id(3L)
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .authors(mutableListOf(Author("gayle", "Gayle McDowell")))
+            .publishDate(LocalDate.parse("2019-01-12T10:40:00", DateTimeFormatter.ISO_DATE_TIME))
+            .tags(mutableListOf("algorithms", "coding-interviews"))
+            .build(),
+        Article.builder
+            .id(4L)
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .authors(mutableListOf(Author("jetbrains", "JetBrains Press")))
+            .publishDate(LocalDate.parse("2019-01-15T10:40:00", DateTimeFormatter.ISO_DATE_TIME))
+            .tags(mutableListOf("kotlin", "microservices"))
+            .build(),
+        Article.builder
+            .id(5L)
+            .headline("headline")
+            .content("content")
+            .summary("summary")
+            .authors(mutableListOf(Author("martin.fowler", "Martin Fowler")))
+            .publishDate(LocalDate.parse("2019-01-16T10:40:00", DateTimeFormatter.ISO_DATE_TIME))
+            .tags(mutableListOf("design-patterns", "java", "microservices"))
+            .build()
+    )
 }

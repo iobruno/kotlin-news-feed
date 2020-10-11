@@ -1,23 +1,23 @@
 package io.petproject.model
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 internal class AuthorTest {
 
     @Test
     fun `when username is blank, throw IllegalArgEx`() {
-        assertThrows(IllegalArgumentException::class.java) {
-            Author(username = " ", name = "John Doe")        }
+        assertThatThrownBy {
+            Author(username = " ", name = "John Doe")
+        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `when name is blank, throw IllegalArgEx`() {
-        assertThrows(IllegalArgumentException::class.java) {
+        assertThatThrownBy {
             Author(username = "john.doe", name = " ")
-        }
+        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
@@ -26,5 +26,4 @@ internal class AuthorTest {
         val sameAuthor = Author("username", "Another Name")
         assertThat(author).isEqualTo(sameAuthor)
     }
-
 }

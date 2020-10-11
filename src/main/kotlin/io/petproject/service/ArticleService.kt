@@ -21,16 +21,19 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
-                                            val authorRepo: AuthorRepository) {
+class ArticleService @Autowired constructor(
+    val articleRepo: ArticleRepository,
+    val authorRepo: AuthorRepository
+) {
 
     fun publish(article: Article): Article {
-        val authors = findOrSaveAuthors(article.meta.authors)
+        val authors = findOrSaveAuthors(article.authors)
         val document = Article(
                 headline = article.headline,
                 content = article.content,
                 summary = article.summary,
-                meta = ArticleMetadata(article.meta.publishDate, article.meta.tags, authors)
+                authors = authors,
+                meta = ArticleMetadata(article.meta.publishDate, article.meta.tags)
         )
         return articleRepo.save(document)
     }
@@ -42,7 +45,7 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
     fun update(id: Long, updatingArticle: Article): Article? {
         val foundArticle = retrieve(id)
         return foundArticle?.let {
-            val authors = findOrSaveAuthors(updatingArticle.meta.authors)
+            val authors = findOrSaveAuthors(updatingArticle.authors)
             val updatedArticle = Article.Builder()
                     .headline(updatingArticle.headline)
                     .content(updatingArticle.content)

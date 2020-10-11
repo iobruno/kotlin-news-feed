@@ -7,7 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.format.annotation.DateTimeFormat.ISO
+import org.springframework.format.annotation.DateTimeFormat.ISO.DATE
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -25,12 +25,14 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @GetMapping
-    fun search(@RequestParam("authors") authors: String?,
-               @RequestParam("tags") tags: String?,
-               @RequestParam("afterDate") @DateTimeFormat(iso = ISO.DATE) afterDate: LocalDate?,
-               @RequestParam("beforeDate") @DateTimeFormat(iso = ISO.DATE) beforeDate: LocalDate?,
-               @RequestParam("page", defaultValue = "0") page: Int,
-               @RequestParam("pageSize", defaultValue = "10") pageSize: Int): ResponseEntity<Page<Article>> {
+    fun search(
+        @RequestParam("authors") authors: String?,
+        @RequestParam("tags") tags: String?,
+        @RequestParam("afterDate") @DateTimeFormat(iso = DATE) afterDate: LocalDate?,
+        @RequestParam("beforeDate") @DateTimeFormat(iso = DATE) beforeDate: LocalDate?,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("pageSize", defaultValue = "10") pageSize: Int
+    ): ResponseEntity<Page<Article>> {
         val pageable = PageRequest.of(page, pageSize)
         val searchResults = service.search(authors, tags, afterDate, beforeDate, pageable)
         return ResponseEntity.ok(searchResults)
@@ -43,8 +45,10 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable("id") id: Long,
-               @RequestBody updatingArticle: Article): ResponseEntity<Article> {
+    fun update(
+        @PathVariable("id") id: Long,
+        @RequestBody updatingArticle: Article
+    ): ResponseEntity<Article> {
         val article: Article? = service.update(id, updatingArticle)
         return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
     }
@@ -63,5 +67,4 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     fun handleMessageNotReadable(): ResponseEntity<Any> {
         return ResponseEntity.badRequest().build()
     }
-
 }
