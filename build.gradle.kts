@@ -63,13 +63,13 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom(
-            sourceSets.main.get().output.asFileTree.matching {
-                exclude(
-                        "io/petproject/ApplicationKt.class",
-                        "io/petproject/repository/*.class",
-                        "io/petproject/config/*.class"
-                )
-            }
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude(
+                "io/petproject/ApplicationKt.class",
+                "io/petproject/repository/*.class",
+                "io/petproject/config/*.class"
+            )
+        }
     )
 }
 
@@ -80,8 +80,8 @@ val codeCoverage by tasks.registering {
     dependsOn(tasks.test, tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
 
     tasks.findByName("jacocoTestReport")
-            ?.mustRunAfter(tasks.findByName("test"))
+        ?.mustRunAfter(tasks.findByName("test"))
 
     tasks.findByName("jacocoTestCoverageVerification")
-            ?.mustRunAfter(tasks.findByName("jacocoTestReport"))
+        ?.mustRunAfter(tasks.findByName("jacocoTestReport"))
 }

@@ -74,8 +74,6 @@ data class Article(
 
         fun tags(tags: MutableList<String>) = apply { this.tags = tags }
 
-        fun tags(tags: Array<String>) = apply { this.tags = mutableListOf() }
-
         fun id(id: Long) = apply { this.id = id }
 
         fun build() = Article(

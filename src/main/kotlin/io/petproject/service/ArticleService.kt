@@ -26,27 +26,28 @@ class ArticleService @Autowired constructor(
     val authorRepo: AuthorRepository
 ) {
 
+    fun retrieve(id: Long): Article? = articleRepo.findByIdOrNull(id)
+
+    fun purge(id: Long) = articleRepo.deleteById(id)
+
     fun publish(article: Article): Article {
         val authors = findOrSaveAuthors(article.authors)
         val document = Article(
-                headline = article.headline,
-                content = article.content,
-                summary = article.summary,
-                authors = authors,
-                meta = ArticleMetadata(article.meta.publishDate, article.meta.tags)
+            headline = article.headline,
+            content = article.content,
+            summary = article.summary,
+            authors = authors,
+            meta = ArticleMetadata(article.meta.publishDate, article.meta.tags)
         )
         return articleRepo.save(document)
-    }
-
-    fun retrieve(id: Long): Article? {
-        return articleRepo.findByIdOrNull(id)
     }
 
     fun update(id: Long, updatingArticle: Article): Article? {
         val foundArticle = retrieve(id)
         return foundArticle?.let {
             val authors = findOrSaveAuthors(updatingArticle.authors)
-            val updatedArticle = Article.Builder()
+            val updatedArticle: Article =
+                Article.builder
                     .headline(updatingArticle.headline)
                     .content(updatingArticle.content)
                     .summary(updatingArticle.summary)
@@ -60,38 +61,45 @@ class ArticleService @Autowired constructor(
         }
     }
 
-    fun purge(id: Long) {
-        articleRepo.deleteById(id)
-    }
+    fun search(
+        authors: List<String>,
+        tags: List<String>,
+        afterDate: LocalDate?,
+        beforeDate: LocalDate?,
+        page: Pageable = PageRequest.of(0, 10)
+    ): Page<Article> {
 
-    fun search(authors: List<String>, tags: List<String>,
-               afterDate: LocalDate?, beforeDate: LocalDate?,
-               page: Pageable = PageRequest.of(0, 10)): Page<Article> {
-
-        val specs = Specification.where(withAuthors(authors))!!
+        val specs: Specification<Article> =
+            Specification
+                .where(withAuthors(authors))!!
                 .and(withTags(tags))!!
                 .and(withDateAfter(afterDate))!!
-                .and(withDateBefore(beforeDate))
+                .and(withDateBefore(beforeDate))!!
 
         return articleRepo.findAll(specs, page)
     }
 
-    fun search(authors: String?, tags: String?,
-               afterDate: LocalDate?, beforeDate: LocalDate?,
-               page: Pageable = PageRequest.of(0, 10)): Page<Article> {
+    fun search(
+        authors: String?,
+        tags: String?,
+        afterDate: LocalDate?,
+        beforeDate: LocalDate?,
+        page: Pageable = PageRequest.of(0, 10)
+    ): Page<Article> {
 
-        return search(authors = sanitizeSearchString(authors), tags = sanitizeSearchString(tags),
-                afterDate = afterDate, beforeDate = beforeDate, page = page)
+        return search(
+            authors = sanitizeSearchString(authors),
+            tags = sanitizeSearchString(tags),
+            afterDate = afterDate,
+            beforeDate = beforeDate
+        )
     }
 
-    private fun sanitizeSearchString(string: String?): List<String> {
-        return string?.let { s -> s.split(",").map { it.trim() } } ?: listOf()
-    }
+    private fun sanitizeSearchString(string: String?): List<String> =
+        string?.let { str -> str.split(",").map { it.trim() } } ?: listOf()
 
-    private fun findOrSaveAuthors(authors: Iterable<Author>): MutableList<Author> {
-        return authors.map {
+    private fun findOrSaveAuthors(authors: Iterable<Author>): MutableList<Author> =
+        authors.map {
             authorRepo.findByUsername(it.username) ?: authorRepo.saveAndFlush(it)
         }.toMutableList()
-    }
-
 }

@@ -64,7 +64,6 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
-    fun handleMessageNotReadable(): ResponseEntity<Any> {
-        return ResponseEntity.badRequest().build()
-    }
+    fun handleMessageNotReadable(): ResponseEntity<Any> = ResponseEntity.badRequest().build()
+
 }
