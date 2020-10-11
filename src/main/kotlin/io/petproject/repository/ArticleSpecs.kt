@@ -8,7 +8,7 @@ import javax.persistence.criteria.*
 object ArticleSpecs {
 
     fun withAuthors(authors: List<String>): Specification<Article> {
-        return object: Specification<Article> {
+        return object : Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val authorsPredicate = root.join<Any, Any>("meta").join<Any, Any>("authors")
                 query.distinct(true)
@@ -25,7 +25,7 @@ object ArticleSpecs {
     }
 
     fun withTags(tags: List<String>): Specification<Article> {
-        return object: Specification<Article> {
+        return object : Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val tagsPredicate = root.join<Any, Any>("meta").join<Any, Any>("tags")
                 query.distinct(true)
@@ -39,7 +39,7 @@ object ArticleSpecs {
     }
 
     fun withDateAfter(afterDate: LocalDate?): Specification<Article> {
-        return object: Specification<Article> {
+        return object : Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val publishDatePredicate: Path<LocalDate> = root.join<Any, Any>("meta").get("publishDate")
                 query.distinct(true)
@@ -49,7 +49,7 @@ object ArticleSpecs {
     }
 
     fun withDateBefore(beforeDate: LocalDate?): Specification<Article> {
-        return object: Specification<Article> {
+        return object : Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
                 val publishDatePredicate: Path<LocalDate> = root.join<Any, Any>("meta").get("publishDate")
                 query.distinct(true)

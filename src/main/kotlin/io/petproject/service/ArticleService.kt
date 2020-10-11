@@ -27,8 +27,10 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
     fun publish(article: Article): Article {
         val authors = findOrSaveAuthors(article.meta.authors)
         val document = Article(
-            headline = article.headline, content = article.content, summary = article.summary,
-            meta = ArticleMetadata(article.meta.publishDate, article.meta.tags, authors)
+                headline = article.headline,
+                content = article.content,
+                summary = article.summary,
+                meta = ArticleMetadata(article.meta.publishDate, article.meta.tags, authors)
         )
         return articleRepo.save(document)
     }
@@ -85,8 +87,7 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
 
     private fun findOrSaveAuthors(authors: Iterable<Author>): MutableList<Author> {
         return authors.map {
-            authorRepo.findByUsername(it.username) ?:
-            authorRepo.saveAndFlush(it)
+            authorRepo.findByUsername(it.username) ?: authorRepo.saveAndFlush(it)
         }.toMutableList()
     }
 

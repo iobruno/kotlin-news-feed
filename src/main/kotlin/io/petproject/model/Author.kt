@@ -33,7 +33,7 @@ data class Author(
         return try {
             val that = other as Author
             this.username == that.username
-        } catch(ex: ClassCastException) {
+        } catch (ex: ClassCastException) {
             false
         }
     }
