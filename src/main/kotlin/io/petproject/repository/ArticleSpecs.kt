@@ -10,7 +10,7 @@ object ArticleSpecs {
     fun withAuthors(authors: List<String>): Specification<Article> {
         return object : Specification<Article> {
             override fun toPredicate(root: Root<Article>, query: CriteriaQuery<*>, cb: CriteriaBuilder): Predicate? {
-                val authorsPredicate = root.join<Any, Any>("meta").join<Any, Any>("authors")
+                val authorsPredicate = root.join<Any, Any>("authors")
                 query.distinct(true)
 
                 if (authors.isNotEmpty()) {
@@ -57,5 +57,4 @@ object ArticleSpecs {
             }
         }
     }
-
 }
