@@ -22,7 +22,7 @@ repositories {
 dependencies {
     val junitVersion = "5.7.0"
     val assertJVersion = "3.17.2"
-    val restAssured = "4.3.1"
+    val restAssured = "4.2.0"
     val h2Version = "1.4.197"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
@@ -34,13 +34,19 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    testImplementation("io.rest-assured:rest-assured:$restAssured")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
-    testImplementation("org.junit.vintage:junit-vintage-engine:$junitVersion")
-    testImplementation("org.assertj:assertj-core:$assertJVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(module = "junit")
     }
+    testImplementation("io.rest-assured:rest-assured:$restAssured")
+    testImplementation("io.rest-assured:rest-assured-common:$restAssured")
+    testImplementation("io.rest-assured:json-path:$restAssured")
+    testImplementation("io.rest-assured:xml-path:$restAssured")
+    testImplementation("io.rest-assured:kotlin-extensions:$restAssured")
+    testImplementation("io.rest-assured:spring-mock-mvc:$restAssured")
+    testImplementation("io.rest-assured:spring-mock-mvc-kotlin-extensions:$restAssured")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("org.junit.vintage:junit-vintage-engine:$junitVersion")
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
     runtimeOnly("com.h2database:h2:$h2Version")
 }
 
