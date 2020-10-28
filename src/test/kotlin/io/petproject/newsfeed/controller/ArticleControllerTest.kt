@@ -4,37 +4,44 @@ import io.petproject.newsfeed.model.Article
 import io.petproject.newsfeed.model.ArticleMetadata
 import io.petproject.newsfeed.model.Author
 import io.petproject.newsfeed.service.ArticleService
+import io.restassured.RestAssured
+import io.restassured.module.kotlin.extensions.Given
+import io.restassured.module.kotlin.extensions.Then
+import io.restassured.module.kotlin.extensions.When
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.doNothing
-import org.mockito.Mockito.doThrow
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.PageImpl
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
-@ExtendWith(SpringExtension::class)
-@WebMvcTest(ArticleController::class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 internal class ArticleControllerTest {
+
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @MockBean
     private lateinit var service: ArticleService
 
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @LocalServerPort
+    private var serverPort: Int = 0
+
+    @BeforeEach
+    fun setup() {
+        RestAssured.port = serverPort
+    }
 
     private val authors = mutableListOf(
         Author("john.doe", "John Doe", 1L),
@@ -54,8 +61,12 @@ internal class ArticleControllerTest {
 
     @Test
     fun `when publishing an article, if it was successful, return status 201`() {
-        val payload =
-            """
+        `when`(service.publish(any()))
+            .thenReturn(Article("headline", "content", "summary", authors, metadata, 1L))
+
+        Given {
+            contentType(APPLICATION_JSON_VALUE)
+            body("""
             {
                 "headline": "headline",
                 "summary": "summary",
@@ -69,20 +80,19 @@ internal class ArticleControllerTest {
                     "tags": ["facebook", "image-compression", "gear", "internet"]
                 }
             }
-            """
-
-        `when`(service.publish(any()))
-            .thenReturn(Article("headline", "content", "summary", authors, metadata, 1L))
-
-        mockMvc
-            .perform(post(BASE_URL).contentType(APPLICATION_JSON_VALUE).content(payload))
-            .andExpect(status().isCreated)
+            """)
+        } When {
+            post(BASE_URL)
+        } Then {
+            statusCode(201)
+        }
     }
 
     @Test
     fun `when publishing an article, if the contract was invalid, return status 400`() {
-        val payload =
-            """
+        Given {
+            contentType(APPLICATION_JSON_VALUE)
+            body("""
             {
                 "headline": "headline",
                 "summary": "summary",
@@ -94,19 +104,19 @@ internal class ArticleControllerTest {
                 "publishDate": "2019-01-18",
                 "tags": ["facebook", "image-compression", "gear", "internet"]
             }
-            """
-
-        mockMvc.perform(
+            """)
+        } When {
             post(BASE_URL)
-                .contentType(APPLICATION_JSON_VALUE)
-                .content(payload)
-        ).andExpect(status().isBadRequest)
+        } Then {
+            statusCode(400)
+        }
     }
 
     @Test
     fun `when publishing an article, if entity couldn't be created, return status 422`() {
-        val noContentPayload =
-            """
+        Given {
+            contentType(APPLICATION_JSON_VALUE)
+            body("""
             {
                 "headline": "headline",
                 "summary": "summary",
@@ -120,47 +130,70 @@ internal class ArticleControllerTest {
                     "tags": ["facebook", "image-compression", "gear", "internet"]
                 }
             }
-            """
-
-        mockMvc.perform(
+            """)
+        } When {
             post(BASE_URL)
-                .contentType(APPLICATION_JSON_VALUE)
-                .content(noContentPayload)
-        ).andExpect(status().isBadRequest)
+        } Then {
+            statusCode(400)
+        }
     }
 
     @Test
     fun `when retrieving an article, if it was found, return status 200`() {
         `when`(service.retrieve(anyLong()))
-            .thenReturn(
-                Article.builder
-                    .id(1L)
-                    .headline("headline")
-                    .content("content")
-                    .summary("summary")
-                    .authors(authors)
-                    .publishDate(metadata.publishDate)
-                    .tags(metadata.tags)
-                    .build()
-            )
+            .thenReturn(Article.builder
+                .id(1L)
+                .headline("headline")
+                .content("content")
+                .summary("summary")
+                .authors(authors)
+                .publishDate(metadata.publishDate)
+                .tags(metadata.tags)
+                .build())
 
-        mockMvc.perform(get("$BASE_URL/{id}", 1L))
-            .andExpect(status().isOk)
+        Given {
+            pathParam("id", 1L)
+        } When {
+            get("$BASE_URL/{id}")
+        } Then {
+            statusCode(200)
+        }
     }
 
     @Test
     fun `when retrieving an article, if it was not found, return status 404`() {
-        `when`(service.retrieve(anyLong())).thenReturn(null)
+        `when`(service.retrieve(anyLong()))
+            .thenReturn(null)
 
-        mockMvc.perform(get("$BASE_URL/{id}", 1L))
-            .andExpect(status().isNotFound)
+        Given {
+            pathParam("id", 1L)
+        } When {
+            get("$BASE_URL/{id}")
+        } Then {
+            statusCode(404)
+        }
     }
 
     @Test
     fun `when updating an article, if found, return status 200`() {
-        val placeId = 4L
-        val payload =
-            """
+        `when`(service.update(anyLong(), any()))
+            .thenReturn(Article.builder
+                .headline("anotherHeadline")
+                .summary("anotherSummary")
+                .content("anotherContent")
+                .publishDate(LocalDate.of(2019, 1, 18))
+                .authors(mutableListOf(
+                    Author("john.doe", "John Doe"),
+                    Author("john.smith", "John Smith")
+                ))
+                .tags(mutableListOf("facebook", "image-compression", "gear"))
+                .id(1L)
+                .build())
+
+        Given {
+            pathParam("id", 1L)
+            contentType(APPLICATION_JSON_VALUE)
+            body("""
             {
                 "headline": "anotherHeadline",
                 "summary": "anotherSummary",
@@ -174,37 +207,23 @@ internal class ArticleControllerTest {
                     "tags": ["facebook", "image-compression", "gear"]
                 }
             }
-            """
-
-        `when`(service.update(anyLong(), any()))
-            .thenReturn(
-                Article.builder
-                    .headline("anotherHeadline")
-                    .summary("anotherSummary")
-                    .content("anotherContent")
-                    .publishDate(LocalDate.of(2019, 1, 18))
-                    .authors(
-                        mutableListOf(
-                            Author("john.doe", "John Doe"),
-                            Author("john.smith", "John Smith")
-                        )
-                    )
-                    .tags(mutableListOf("facebook", "image-compression", "gear"))
-                    .id(placeId)
-                    .build()
-            )
-
-        mockMvc.perform(
-            put("$BASE_URL/{id}", placeId)
-                .contentType(APPLICATION_JSON_VALUE)
-                .content(payload)
-        ).andExpect(status().isOk)
+            """)
+        } When {
+            put("$BASE_URL/{id}")
+        } Then {
+            statusCode(200)
+        }
     }
 
     @Test
     fun `when updating an article, if not found, return status 404`() {
-        val payload =
-            """
+        `when`(service.update(anyLong(), any()))
+            .thenReturn(null)
+
+        Given {
+            pathParam("id", 1L)
+            contentType(APPLICATION_JSON_VALUE)
+            body("""
             {
                 "headline": "anotherHeadline",
                 "summary": "anotherSummary",
@@ -218,24 +237,25 @@ internal class ArticleControllerTest {
                     "tags": ["facebook", "image-compression", "gear"]
                 }
             }
-            """
-
-        `when`(service.update(anyLong(), any()))
-            .thenReturn(null)
-
-        mockMvc.perform(
-            put("$BASE_URL/{id}", Long.MAX_VALUE)
-                .contentType(APPLICATION_JSON_VALUE)
-                .content(payload)
-        ).andExpect(status().isNotFound)
+            """)
+        } When {
+            put("$BASE_URL/{id}")
+        } Then {
+            statusCode(404)
+        }
     }
 
     @Test
     fun `when purging an article, if it was found, return status 200`() {
         doNothing().`when`(service).purge(anyLong())
 
-        mockMvc.perform(delete("$BASE_URL/{id}", 1L))
-            .andExpect(status().isOk)
+        Given {
+            pathParam("id", 1L)
+        } When {
+            delete("$BASE_URL/{id}")
+        } Then {
+            statusCode(200)
+        }
     }
 
     @Test
@@ -243,24 +263,32 @@ internal class ArticleControllerTest {
         doThrow(EmptyResultDataAccessException::class.java)
             .`when`(service).purge(anyLong())
 
-        mockMvc.perform(delete("$BASE_URL/{id}", 1L))
-            .andExpect(status().isNotFound)
+        Given {
+            pathParam("id", 1L)
+        } When {
+            delete("$BASE_URL/{id}")
+        } Then {
+            statusCode(404)
+        }
     }
 
     @Test
     fun `when searching an article, return a list of all that match the criteria, with status 200`() {
-        `when`(
-            service.search(
-                authors = any<String?>(),
-                tags = any<String?>(),
-                afterDate = any(),
-                beforeDate = any(),
-                page = any()
-            )
-        ).thenReturn(PageImpl(getArticles()))
+        `when`(service.search(
+            authors = anyString(),
+            tags = anyString(),
+            afterDate = any<LocalDate>(),
+            beforeDate = any<LocalDate>(),
+            page = any()
+        )).thenReturn(PageImpl(getArticles()))
 
-        mockMvc.perform(get("$BASE_URL/"))
-            .andExpect(status().isOk)
+        Given {
+            noFilters()
+        } When {
+            get(BASE_URL)
+        } Then {
+            statusCode(200)
+        }
     }
 
     private fun getArticles() = mutableListOf(
