@@ -4,8 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: avid-news-feed:latest
+    image: iobruno/avid-news-feed:latest
     ports:
-      - 80:8080
+      - 8080:8080
     networks:
       - default
