@@ -21,10 +21,8 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class ArticleService @Autowired constructor(
-    val articleRepo: ArticleRepository,
-    val authorRepo: AuthorRepository
-) {
+class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
+                                            val authorRepo: AuthorRepository) {
 
     fun retrieve(id: Long): Article? = articleRepo.findByIdOrNull(id)
 
@@ -86,7 +84,6 @@ class ArticleService @Autowired constructor(
         beforeDate: LocalDate?,
         page: Pageable = PageRequest.of(0, 10)
     ): Page<Article> {
-
         return search(
             authors = sanitizeSearchString(authors),
             tags = sanitizeSearchString(tags),

@@ -28,13 +28,13 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     fun search(
         @RequestParam("authors") authors: String?,
         @RequestParam("tags") tags: String?,
-        @RequestParam("afterDate") @DateTimeFormat(iso = DATE) afterDate: LocalDate?,
-        @RequestParam("beforeDate") @DateTimeFormat(iso = DATE) beforeDate: LocalDate?,
+        @RequestParam("publishedAfter") @DateTimeFormat(iso = DATE) publishedAfter: LocalDate?,
+        @RequestParam("publishedBefore") @DateTimeFormat(iso = DATE) publishedBefore: LocalDate?,
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("pageSize", defaultValue = "10") pageSize: Int
     ): ResponseEntity<Page<Article>> {
         val pageable = PageRequest.of(page, pageSize)
-        val searchResults = service.search(authors, tags, afterDate, beforeDate, pageable)
+        val searchResults = service.search(authors, tags, publishedAfter, publishedBefore, pageable)
         return ResponseEntity.ok(searchResults)
     }
 
@@ -64,6 +64,7 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
     }
 
     @ExceptionHandler(value = [HttpMessageNotReadableException::class])
-    fun handleMessageNotReadable(): ResponseEntity<Any> = ResponseEntity.badRequest().build()
+    fun handleMessageNotReadable(): ResponseEntity<Any> =
+        ResponseEntity.badRequest().build()
 
 }
