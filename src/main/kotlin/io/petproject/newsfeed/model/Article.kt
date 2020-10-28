@@ -68,8 +68,6 @@ data class Article(
 
         fun publishDate(publishDate: LocalDate) = apply { this.publishDate = publishDate }
 
-        fun authors(authors: Iterable<Author>) = apply { this.authors = authors.toMutableList() }
-
         fun authors(authors: MutableList<Author>) = apply { this.authors = authors }
 
         fun tags(tags: MutableList<String>) = apply { this.tags = tags }

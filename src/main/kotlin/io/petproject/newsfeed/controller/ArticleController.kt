@@ -40,8 +40,9 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
 
     @GetMapping("/{id}")
     fun retrieve(@PathVariable("id") id: Long): ResponseEntity<Article> {
-        val article: Article? = service.retrieve(id)
-        return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+        return service.retrieve(id)
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
     }
 
     @PutMapping("/{id}")
@@ -49,8 +50,9 @@ class ArticleController @Autowired constructor(private val service: ArticleServi
         @PathVariable("id") id: Long,
         @RequestBody updatingArticle: Article
     ): ResponseEntity<Article> {
-        val article: Article? = service.update(id, updatingArticle)
-        return article?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+        return service.update(id, updatingArticle)
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.notFound().build()
     }
 
     @DeleteMapping("/{id}")
