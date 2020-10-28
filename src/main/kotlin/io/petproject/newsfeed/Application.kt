@@ -1,4 +1,4 @@
-package io.petproject
+package io.petproject.newsfeed
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,4 +1,4 @@
-package io.petproject.model
+package io.petproject.newsfeed.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

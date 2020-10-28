@@ -1,9 +1,9 @@
-package io.petproject.controller
+package io.petproject.newsfeed.controller
 
-import io.petproject.model.Article
-import io.petproject.model.ArticleMetadata
-import io.petproject.model.Author
-import io.petproject.service.ArticleService
+import io.petproject.newsfeed.model.Article
+import io.petproject.newsfeed.model.ArticleMetadata
+import io.petproject.newsfeed.model.Author
+import io.petproject.newsfeed.service.ArticleService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.PageImpl
-import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc

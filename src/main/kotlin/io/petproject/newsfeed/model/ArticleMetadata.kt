@@ -1,4 +1,4 @@
-package io.petproject.model
+package io.petproject.newsfeed.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate

@@ -1,14 +1,14 @@
-package io.petproject.service
+package io.petproject.newsfeed.service
 
-import io.petproject.model.Article
-import io.petproject.model.ArticleMetadata
-import io.petproject.model.Author
-import io.petproject.repository.ArticleRepository
-import io.petproject.repository.ArticleSpecs.withAuthors
-import io.petproject.repository.ArticleSpecs.withDateAfter
-import io.petproject.repository.ArticleSpecs.withDateBefore
-import io.petproject.repository.ArticleSpecs.withTags
-import io.petproject.repository.AuthorRepository
+import io.petproject.newsfeed.model.Article
+import io.petproject.newsfeed.model.ArticleMetadata
+import io.petproject.newsfeed.model.Author
+import io.petproject.newsfeed.repo.ArticleRepository
+import io.petproject.newsfeed.repo.ArticleSpecs.withAuthors
+import io.petproject.newsfeed.repo.ArticleSpecs.withDateAfter
+import io.petproject.newsfeed.repo.ArticleSpecs.withDateBefore
+import io.petproject.newsfeed.repo.ArticleSpecs.withTags
+import io.petproject.newsfeed.repo.AuthorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

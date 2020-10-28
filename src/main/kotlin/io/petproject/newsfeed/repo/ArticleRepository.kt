@@ -1,6 +1,6 @@
-package io.petproject.repository
+package io.petproject.newsfeed.repo
 
-import io.petproject.model.Article
+import io.petproject.newsfeed.model.Article
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.stereotype.Repository

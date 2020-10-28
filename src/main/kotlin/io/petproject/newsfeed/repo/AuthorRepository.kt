@@ -1,6 +1,6 @@
-package io.petproject.repository
+package io.petproject.newsfeed.repo
 
-import io.petproject.model.Author
+import io.petproject.newsfeed.model.Author
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import javax.transaction.Transactional

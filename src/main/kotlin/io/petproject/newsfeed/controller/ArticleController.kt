@@ -1,7 +1,7 @@
-package io.petproject.controller
+package io.petproject.newsfeed.controller
 
-import io.petproject.model.Article
-import io.petproject.service.ArticleService
+import io.petproject.newsfeed.model.Article
+import io.petproject.newsfeed.service.ArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.Page

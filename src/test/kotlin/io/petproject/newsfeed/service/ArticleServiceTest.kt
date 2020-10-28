@@ -1,9 +1,8 @@
-package io.petproject.service
+package io.petproject.newsfeed.service
 
-import io.petproject.Application
-import io.petproject.model.Article
-import io.petproject.model.ArticleMetadata
-import io.petproject.model.Author
+import io.petproject.newsfeed.Application
+import io.petproject.newsfeed.model.Article
+import io.petproject.newsfeed.model.Author
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
