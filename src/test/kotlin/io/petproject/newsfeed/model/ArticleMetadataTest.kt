@@ -10,6 +10,8 @@ internal class ArticleMetadataTest {
     fun `when tags is empty, it should throw IllegalArgEx`() {
         assertThatThrownBy {
             ArticleMetadata(publishDate = LocalDate.now(), tags = mutableListOf())
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("There must be at least one tag label for the article")
     }
 }

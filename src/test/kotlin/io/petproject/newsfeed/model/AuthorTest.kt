@@ -8,16 +8,16 @@ internal class AuthorTest {
 
     @Test
     fun `when username is blank, throw IllegalArgEx`() {
-        assertThatThrownBy {
-            Author(username = " ", name = "John Doe")
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { Author(username = " ", name = "John Doe") }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("Username must not be blank")
     }
 
     @Test
     fun `when name is blank, throw IllegalArgEx`() {
-        assertThatThrownBy {
-            Author(username = "john.doe", name = " ")
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        assertThatThrownBy { Author(username = "john.doe", name = " ") }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("Author name must not be blank")
     }
 
     @Test
