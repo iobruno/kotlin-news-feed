@@ -22,17 +22,19 @@ repositories {
 dependencies {
     val junitVersion = "5.7.0"
     val assertJVersion = "3.17.2"
+    val restAssured = "4.3.1"
     val h2Version = "1.4.197"
 
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(module = "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-jetty")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    testImplementation("io.rest-assured:rest-assured:$restAssured")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("org.junit.vintage:junit-vintage-engine:$junitVersion")
     testImplementation("org.assertj:assertj-core:$assertJVersion")
@@ -65,9 +67,8 @@ tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom(
         sourceSets.main.get().output.asFileTree.matching {
             exclude(
-                "io/petproject/ApplicationKt.class",
-                "io/petproject/repository/*.class",
-                "io/petproject/config/*.class"
+                "io/petproject/avidfeed/ApplicationKt.class",
+                "io/petproject/avidfeed/repository/*.class"
             )
         }
     )
