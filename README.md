@@ -9,7 +9,7 @@ with the Spring Stack. It can be used as a reference or starting point for anyon
 ## Tech Stack
 - Kotlin 1.4 (targeting Java 11)
 - Spring Framework 5.x (Spring Boot, Spring MVC, Spring Data JPA)
-- JUnit 5.x, Mockito
+- Rest-assured, JUnit 5.x, Mockito
 - Gradle (Kotlin DSL)
 - Docker, docker-compose
 
@@ -60,7 +60,8 @@ Public Collection:
 https://www.getpostman.com/collections/96bd0fdffd578b98ecd2
 
 ## TODO:
-- [x] Automated builds with a CI (Travis | CircleCI)
 - [x] Code Coverage check
-- [x] Dockerize app
+- [x] Dockerization
+- [x] CI with (Travis CI)
+- [ ] CI with GitHub Actions
 - [ ] Ship it with GraalVM
