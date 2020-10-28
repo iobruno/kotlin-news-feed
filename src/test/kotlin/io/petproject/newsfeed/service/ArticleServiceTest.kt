@@ -4,7 +4,7 @@ import io.petproject.newsfeed.Application
 import io.petproject.newsfeed.model.Article
 import io.petproject.newsfeed.model.Author
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,19 +36,17 @@ internal class ArticleServiceTest {
             .summary("summary")
             .publishDate(LocalDate.now())
             .tags(mutableListOf("first-tag", "second-tag"))
-            .authors(
-                mutableListOf(
-                    Author("john.doe", "John Doe"),
-                    Author("jane.doe", "Jane Doe")
-                )
-            )
+            .authors(mutableListOf(
+                Author("john.doe", "John Doe"),
+                Author("jane.doe", "Jane Doe")
+            ))
             .build()
     }
 
     @Test
     fun `when publishing, if successful, it should return an article with an Id`() {
         val publishedArticle = service.publish(article)
-        assertThat(publishedArticle.id).isPositive()
+        assertThat(publishedArticle.id).isPositive
     }
 
     @Test
@@ -137,9 +135,8 @@ internal class ArticleServiceTest {
 
     @Test
     fun `when purging an article, if it was not found, throw EmptyResultDataAccessEx`() {
-        assertThrows(EmptyResultDataAccessException::class.java) {
-            service.purge(Long.MAX_VALUE)
-        }
+        assertThatThrownBy { service.purge(Long.MAX_VALUE) }
+            .isInstanceOf(EmptyResultDataAccessException::class.java)
     }
 
     @Test
