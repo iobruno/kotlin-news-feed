@@ -7,7 +7,7 @@ import javax.persistence.FetchType.LAZY
 
 @Embeddable
 data class ArticleMetadata(
-    @Column(name = "publishDate")
+    @Column(name = "publishDate", nullable = false)
     @JsonProperty("publishDate")
     val publishDate: LocalDate,
 

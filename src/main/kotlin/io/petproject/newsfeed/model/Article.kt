@@ -10,24 +10,24 @@ import javax.persistence.GenerationType.AUTO
 @Entity
 @Table(name = "articles")
 data class Article(
-    @Column(name = "headline")
+
+    @Column(name = "headline", unique = true, nullable = false)
     @JsonProperty("headline")
     val headline: String,
 
-    @Lob @Column(name = "content")
+    @Lob
+    @Column(name = "content", nullable = false)
     @JsonProperty("content")
     val content: String,
 
-    @Column(name = "summary")
+    @Column(name = "summary", nullable = false)
     @JsonProperty("summary")
     val summary: String?,
 
     @ManyToMany(cascade = [PERSIST, DETACH, MERGE, REFRESH])
-    @JoinTable(
-        name = "authors_articles",
+    @JoinTable(name = "authors_articles",
         joinColumns = [JoinColumn(name = "article_id")],
-        inverseJoinColumns = [JoinColumn(name = "author_id")]
-    )
+        inverseJoinColumns = [JoinColumn(name = "author_id")])
     @JsonProperty("authors")
     @JsonManagedReference
     val authors: MutableList<Author>,

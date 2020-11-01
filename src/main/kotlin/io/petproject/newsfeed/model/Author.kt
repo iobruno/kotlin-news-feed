@@ -10,11 +10,11 @@ import javax.persistence.GenerationType.AUTO
 @Table(name = "authors")
 data class Author(
     @NaturalId
-    @Column(name = "username", unique = false)
+    @Column(name = "username")
     @JsonProperty("username")
     val username: String,
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     @JsonProperty("name")
     val name: String,
 
