@@ -60,19 +60,19 @@ data class Article(
         private lateinit var tags: MutableList<String>
         private var id: Long? = null
 
-        fun headline(headline: String) = apply { this.headline = headline }
+        fun withHeadline(headline: String) = apply { this.headline = headline }
 
-        fun content(content: String) = apply { this.content = content }
+        fun withContent(content: String) = apply { this.content = content }
 
-        fun summary(summary: String?) = apply { this.summary = summary }
+        fun wthSummary(summary: String?) = apply { this.summary = summary }
 
-        fun publishDate(publishDate: LocalDate) = apply { this.publishDate = publishDate }
+        fun withPubDate(publishDate: LocalDate) = apply { this.publishDate = publishDate }
 
-        fun authors(authors: MutableList<Author>) = apply { this.authors = authors }
+        fun wthAuthors(authors: MutableList<Author>) = apply { this.authors = authors }
 
-        fun tags(tags: MutableList<String>) = apply { this.tags = tags }
+        fun withTags(tags: MutableList<String>) = apply { this.tags = tags }
 
-        fun id(id: Long) = apply { this.id = id }
+        fun withId(id: Long) = apply { this.id = id }
 
         fun build() = Article(
             id = id,
