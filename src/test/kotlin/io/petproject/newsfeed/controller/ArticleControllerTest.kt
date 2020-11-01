@@ -142,13 +142,13 @@ internal class ArticleControllerTest {
     fun `when retrieving an article, if it was found, return status 200`() {
         `when`(service.retrieve(anyLong()))
             .thenReturn(Article.builder
-                .id(1L)
-                .headline("headline")
-                .content("content")
-                .summary("summary")
-                .authors(authors)
-                .publishDate(metadata.publishDate)
-                .tags(metadata.tags)
+                .withId(1L)
+                .withHeadline("headline")
+                .withContent("content")
+                .wthSummary("summary")
+                .wthAuthors(authors)
+                .withPubDate(metadata.publishDate)
+                .withTags(metadata.tags)
                 .build())
 
         Given {
@@ -178,16 +178,16 @@ internal class ArticleControllerTest {
     fun `when updating an article, if found, return status 200`() {
         `when`(service.update(anyLong(), any()))
             .thenReturn(Article.builder
-                .headline("anotherHeadline")
-                .summary("anotherSummary")
-                .content("anotherContent")
-                .publishDate(LocalDate.of(2019, 1, 18))
-                .authors(mutableListOf(
+                .withHeadline("anotherHeadline")
+                .wthSummary("anotherSummary")
+                .withContent("anotherContent")
+                .withPubDate(LocalDate.of(2019, 1, 18))
+                .wthAuthors(mutableListOf(
                     Author("john.doe", "John Doe"),
                     Author("john.smith", "John Smith")
                 ))
-                .tags(mutableListOf("facebook", "image-compression", "gear"))
-                .id(1L)
+                .withTags(mutableListOf("facebook", "image-compression", "gear"))
+                .withId(1L)
                 .build())
 
         Given {
@@ -293,49 +293,49 @@ internal class ArticleControllerTest {
 
     private fun getArticles() = mutableListOf(
         Article.builder
-            .id(1L)
-            .headline("headline")
-            .content("content")
-            .summary("summary")
-            .authors(mutableListOf(Author("martin.odersky", "Martin Odersky")))
-            .publishDate(LocalDate.parse("2019-01-10T13:14:00", ISO_DATE_TIME))
-            .tags(mutableListOf("scala", "functional-programming"))
+            .withId(1L)
+            .withHeadline("headline I")
+            .withContent("content")
+            .wthSummary("summary")
+            .wthAuthors(mutableListOf(Author("martin.odersky", "Martin Odersky")))
+            .withPubDate(LocalDate.parse("2019-01-10T13:14:00", ISO_DATE_TIME))
+            .withTags(mutableListOf("scala", "functional-programming"))
             .build(),
         Article.builder
-            .id(2L)
-            .headline("headline")
-            .content("content")
-            .summary("summary")
-            .authors(mutableListOf(Author("martin.thompson", "Martin Thompson")))
-            .publishDate(LocalDate.parse("2019-01-11T10:40:00", ISO_DATE_TIME))
-            .tags(mutableListOf("microservices", "low-latency", "performance", "java"))
+            .withId(2L)
+            .withHeadline("headline II")
+            .withContent("content")
+            .wthSummary("summary")
+            .wthAuthors(mutableListOf(Author("martin.thompson", "Martin Thompson")))
+            .withPubDate(LocalDate.parse("2019-01-11T10:40:00", ISO_DATE_TIME))
+            .withTags(mutableListOf("microservices", "low-latency", "performance", "java"))
             .build(),
         Article.builder
-            .id(3L)
-            .headline("headline")
-            .content("content")
-            .summary("summary")
-            .authors(mutableListOf(Author("gayle", "Gayle McDowell")))
-            .publishDate(LocalDate.parse("2019-01-12T10:40:00", ISO_DATE_TIME))
-            .tags(mutableListOf("algorithms", "coding-interviews"))
+            .withId(3L)
+            .withHeadline("headline III")
+            .withContent("content")
+            .wthSummary("summary")
+            .wthAuthors(mutableListOf(Author("gayle", "Gayle McDowell")))
+            .withPubDate(LocalDate.parse("2019-01-12T10:40:00", ISO_DATE_TIME))
+            .withTags(mutableListOf("algorithms", "coding-interviews"))
             .build(),
         Article.builder
-            .id(4L)
-            .headline("headline")
-            .content("content")
-            .summary("summary")
-            .authors(mutableListOf(Author("jetbrains", "JetBrains Press")))
-            .publishDate(LocalDate.parse("2019-01-15T10:40:00", ISO_DATE_TIME))
-            .tags(mutableListOf("kotlin", "microservices"))
+            .withId(4L)
+            .withHeadline("headline IV")
+            .withContent("content")
+            .wthSummary("summary")
+            .wthAuthors(mutableListOf(Author("jetbrains", "JetBrains Press")))
+            .withPubDate(LocalDate.parse("2019-01-15T10:40:00", ISO_DATE_TIME))
+            .withTags(mutableListOf("kotlin", "microservices"))
             .build(),
         Article.builder
-            .id(5L)
-            .headline("headline")
-            .content("content")
-            .summary("summary")
-            .authors(mutableListOf(Author("martin.fowler", "Martin Fowler")))
-            .publishDate(LocalDate.parse("2019-01-16T10:40:00", ISO_DATE_TIME))
-            .tags(mutableListOf("design-patterns", "java", "microservices"))
+            .withId(5L)
+            .withHeadline("headline V")
+            .withContent("content")
+            .wthSummary("summary")
+            .wthAuthors(mutableListOf(Author("martin.fowler", "Martin Fowler")))
+            .withPubDate(LocalDate.parse("2019-01-16T10:40:00", ISO_DATE_TIME))
+            .withTags(mutableListOf("design-patterns", "java", "microservices"))
             .build()
     )
 }

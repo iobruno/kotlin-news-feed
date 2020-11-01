@@ -25,12 +25,12 @@ internal class ArticleTest {
     fun `when content is blank, it should throw IllegalArgEx`() {
         assertThatThrownBy {
             Article.builder
-                .headline("headline")
-                .content(" ")
-                .summary("summary")
-                .authors(authors.toMutableList())
-                .publishDate(metadata.publishDate)
-                .tags(metadata.tags)
+                .withHeadline("headline")
+                .withContent(" ")
+                .wthSummary("summary")
+                .wthAuthors(authors.toMutableList())
+                .withPubDate(metadata.publishDate)
+                .withTags(metadata.tags)
                 .build()
         }
             .isInstanceOf(IllegalArgumentException::class.java)
@@ -41,12 +41,12 @@ internal class ArticleTest {
     fun `when authors is empty, it should throw IllegalArgEx`() {
         assertThatThrownBy {
             Article.builder
-                .headline("headline")
-                .content("content")
-                .summary("summary")
-                .authors(mutableListOf())
-                .publishDate(metadata.publishDate)
-                .tags(metadata.tags)
+                .withHeadline("headline")
+                .withContent("content")
+                .wthSummary("summary")
+                .wthAuthors(mutableListOf())
+                .withPubDate(metadata.publishDate)
+                .withTags(metadata.tags)
                 .build()
         }
             .isInstanceOf(IllegalArgumentException::class.java)

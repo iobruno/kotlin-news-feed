@@ -46,13 +46,13 @@ class ArticleService @Autowired constructor(val articleRepo: ArticleRepository,
             val authors = findOrSaveAuthors(updatingArticle.authors)
             val updatedArticle: Article =
                 Article.builder
-                    .headline(updatingArticle.headline)
-                    .content(updatingArticle.content)
-                    .summary(updatingArticle.summary)
-                    .publishDate(updatingArticle.meta.publishDate)
-                    .tags(updatingArticle.meta.tags)
-                    .authors(authors)
-                    .id(foundArticle.id!!)
+                    .withHeadline(updatingArticle.headline)
+                    .withContent(updatingArticle.content)
+                    .wthSummary(updatingArticle.summary)
+                    .withPubDate(updatingArticle.meta.publishDate)
+                    .withTags(updatingArticle.meta.tags)
+                    .wthAuthors(authors)
+                    .withId(foundArticle.id!!)
                     .build()
 
             articleRepo.save(updatedArticle)
