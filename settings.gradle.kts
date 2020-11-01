@@ -1,1 +1,1 @@
-rootProject.name = "avid-news-feed"
+rootProject.name = "kotlin-news-feed"
